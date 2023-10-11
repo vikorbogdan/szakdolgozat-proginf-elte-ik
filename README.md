@@ -1,1 +1,1 @@
-# szakdolgozat-proginf-elte-ik
+# Óravázlat app
