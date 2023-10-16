@@ -2,31 +2,30 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import FeaturesCard from "@/components/landing/FeaturesCard";
 import ProcessFlowCard from "@/components/landing/ProcessFlowCard";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import { BrainCircuit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import waveLine from "src/svg/wave-line.svg";
 export default function Home() {
   return (
-    <MaxWidthWrapper className="mb-12 mt-14 sm:mt-40 flex flex-col items-center justify-center text-center">
-      <Badge className="rounded-full font-normal md:px-6 md:py-2 md:text-md">
+    <MaxWidthWrapper className="mb-12 mt-14 flex flex-col items-center justify-center text-center">
+      <Badge className="rounded-full drop-shadow-lg font-normal md:px-6 md:py-2 md:text-md">
         studio is now Live! 🎓 🥳
       </Badge>
-      <main className="flex flex-col gap-24 md:gap-48">
+      <main className="flex mt-24 flex-col gap-24 md:gap-48">
         <div id="hero" className="flex flex-col items-center w-full gap-24">
-          <h1 className="text-6xl md:text-9xl font-bold">
-            Elevate teaching with <span className="text-blue-500">studio</span>.
+          <h1 className="drop-shadow-lg text-6xl md:text-9xl font-bold">
+            Elevate teaching with <span className="text-blue-500 ">studio</span>
+            .
           </h1>
           <div className="flex gap-5">
-            <Button>Log in</Button>
-            <Button variant="outline">Sign up</Button>
+            <Link href="/" className={buttonVariants({ variant: "default" })}>
+              Log in
+            </Link>
+            <Link href="/" className={buttonVariants({ variant: "secondary" })}>
+              Sign up
+            </Link>
           </div>
         </div>
         <div id="features" className="flex flex-col gap-12 items-center w-full">
@@ -66,7 +65,7 @@ export default function Home() {
           id="howitworks"
           className="flex flex-col gap-12 items-center w-full"
         >
-          <h2 className="text-3xl md:text-5xl font-bold">How it works</h2>
+          <h2 className="text-3xl md:text-5xl font-bold">How does it work?</h2>
           <div
             id="flow-diagram"
             className="flex flex-col md:flex-row gap-5 md:gap-12 xl:gap-0"
@@ -76,6 +75,7 @@ export default function Home() {
               description="Create a class for your study materials."
             />
             <Image
+              aria-hidden="true"
               className="hidden xl:block"
               width={300}
               alt=""
@@ -86,6 +86,7 @@ export default function Home() {
               description="Assemble a lesson outline for your students."
             />
             <Image
+              aria-hidden="true"
               className="hidden xl:block"
               width={300}
               alt=""

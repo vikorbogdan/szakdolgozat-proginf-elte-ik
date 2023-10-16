@@ -1,8 +1,9 @@
+import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
-import "./globals.css";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
-import { ModeToggle } from "@/components/ModeToggle";
+import "./globals.css";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -18,15 +19,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={rubik.className}>
+      <body
+        className={cn(
+          "min-h-screen font-sans antialiased grainy",
+          rubik.className
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <ModeToggle />
-
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
