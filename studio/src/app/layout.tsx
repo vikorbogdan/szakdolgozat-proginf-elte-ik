@@ -1,5 +1,5 @@
-import Navbar from "@/components/Navbar";
-import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/app/(marketing)/_components/Navbar";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
