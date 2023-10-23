@@ -1,8 +1,9 @@
+import Navbar from "@/app/(marketing)/_components/Navbar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { getServerSession } from "next-auth";
 
@@ -19,7 +20,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession();
-  // TODO: Add logo and finalize this layout for not-found page
   return (
     <html lang="en">
       <body
@@ -34,7 +34,10 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SessionProvider session={session}>{children}</SessionProvider>
+          <SessionProvider session={session}>
+            <Navbar />
+            {children}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

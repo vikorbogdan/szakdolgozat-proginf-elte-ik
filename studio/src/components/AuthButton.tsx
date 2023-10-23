@@ -19,7 +19,7 @@ const AuthButton = ({
   return authStatus === "authenticated" ? (
     <Button
       className={cn(className, "")}
-      onClick={() => signOut()}
+      onClick={() => signOut({ callbackUrl: "/" })}
       variant={"secondary"}
     >
       {signOutLabel || "Sign Out"}
