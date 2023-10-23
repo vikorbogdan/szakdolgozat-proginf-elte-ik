@@ -1,13 +1,15 @@
 "use client";
+import AuthButton from "@/components/AuthButton";
+import useScrollTop from "@/hooks/useScrollTop";
+import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import MaxWidthWrapper from "../../../components/MaxWidthWrapper";
 import { ModeToggle } from "../../../components/ModeToggle";
-import { buttonVariants } from "@/components/ui/button";
-import useScrollTop from "@/hooks/useScrollTop";
-import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const scrolledDown = useScrollTop(100);
+  const session = useSession();
   return (
     <nav
       className={cn(
@@ -23,12 +25,7 @@ const Navbar = () => {
           </Link>
           <ModeToggle className="ml-auto mr-5" />
           <div className="flex gap-5">
-            <Link href="/" className={buttonVariants({ variant: "secondary" })}>
-              Log in
-            </Link>
-            <Link href="/" className={buttonVariants({ variant: "default" })}>
-              Sign up
-            </Link>
+            <AuthButton />
           </div>
         </div>
       </MaxWidthWrapper>

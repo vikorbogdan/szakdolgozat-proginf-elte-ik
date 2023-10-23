@@ -7,6 +7,7 @@ import { BrainCircuit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import waveLine from "src/svg/wave-line.svg";
+import AuthButton from "@/components/AuthButton";
 export default function Home() {
   return (
     <MaxWidthWrapper className="mb-12 mt-14 flex flex-col items-center justify-center text-center">
@@ -20,12 +21,7 @@ export default function Home() {
             .
           </h1>
           <div className="flex gap-5">
-            <Link href="/" className={buttonVariants({ variant: "secondary" })}>
-              Log in
-            </Link>
-            <Link href="/" className={buttonVariants({ variant: "default" })}>
-              Sign up
-            </Link>
+            <AuthButton signInLabel="Get Started for Free" />
           </div>
         </div>
         <div id="features" className="flex flex-col gap-12 items-center w-full">
