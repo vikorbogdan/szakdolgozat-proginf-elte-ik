@@ -8,6 +8,7 @@ import { getServerSession } from "next-auth";
 import Sidebar from "./_components/Sidebar";
 import Navbar from "./_components/Navbar";
 import { redirect } from "next/navigation";
+import TRPCProviders from "@/components/providers/Providers";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -34,20 +35,22 @@ export default async function RootLayout({
           rubik.className
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider session={session}>
-            <Navbar />
-            <div className="flex flex-row h-full">
-              <Sidebar />
-              {children}
-            </div>
-          </SessionProvider>
-        </ThemeProvider>
+        <TRPCProviders>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SessionProvider session={session}>
+              <Navbar />
+              <div className="flex flex-row h-full">
+                <Sidebar />
+                {children}
+              </div>
+            </SessionProvider>
+          </ThemeProvider>
+        </TRPCProviders>
       </body>
     </html>
   );

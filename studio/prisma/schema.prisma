@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+  role      Role     @default(USER)
+  lessons   Lesson[]
+  groups    Group[]  @relation("GroupToUser")
+}
+
+model Group {
+  id      Int      @id @default(autoincrement())
+  name    String
+  subject String
+  lessons Lesson[]
+  users   User[]   @relation("GroupToUser")
+}
+
+model Lesson {
+  id      Int     @id @default(autoincrement())
+  title   String
+  content String
+  groupId Int?
+  userId  Int?
+  blocks  Block[]
+  files   File[]
+  group   Group?  @relation(fields: [groupId], references: [id])
+  User    User?   @relation(fields: [userId], references: [id])
+}
+
+model Block {
+  id       Int     @id @default(autoincrement())
+  title    String
+  content  String
+  duration Int
+  lessonId Int?
+  lesson   Lesson? @relation(fields: [lessonId], references: [id])
+}
+
+model File {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  path      String
+  lessonId  Int?
+  lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}

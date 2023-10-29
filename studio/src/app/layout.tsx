@@ -5,6 +5,7 @@ import { Rubik } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { getServerSession } from "next-auth";
+import TRPCProviders from "@/components/providers/Providers";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -25,14 +26,16 @@ export default async function RootLayout({
       <body
         className={cn("min-h-screen font-sans antialiased", rubik.className)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider session={session}>{children}</SessionProvider>
-        </ThemeProvider>
+        <TRPCProviders>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SessionProvider session={session}>{children}</SessionProvider>
+          </ThemeProvider>
+        </TRPCProviders>
       </body>
     </html>
   );

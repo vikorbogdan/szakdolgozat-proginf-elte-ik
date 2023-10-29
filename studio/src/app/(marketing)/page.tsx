@@ -3,20 +3,27 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import FeaturesCard from "@/app/(marketing)/_components/FeaturesCard";
 import ProcessFlowCard from "@/app/(marketing)/_components/ProcessFlowCard";
 import { Badge } from "@/components/ui/badge";
-import { BrainCircuit } from "lucide-react";
+import { BrainCircuit, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import waveLine from "src/svg/wave-line.svg";
 import AuthButton from "@/components/AuthButton";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { trpc } from "../_trpc/client";
 export default function Home() {
   const { data: userData } = useSession();
   if (userData) redirect("/dashboard");
+  const { data: splashText, isLoading: isSplashTextLoading } =
+    trpc.splash.useQuery();
   return (
     <MaxWidthWrapper className="mb-12 mt-14 flex flex-col items-center justify-center text-center">
-      <Badge className="rounded-full drop-shadow-lg font-normal md:px-6 md:py-2 md:text-md">
-        studio is now Live! 🎓 🥳
+      <Badge className="rounded-full select-none drop-shadow-lg font-normal md:px-6 md:py-2 md:text-md animate-bounce">
+        {isSplashTextLoading ? (
+          <Loader className="w-4 h-4 animate-spin" />
+        ) : (
+          splashText
+        )}
       </Badge>
       <main className="flex mt-24 flex-col gap-24 md:gap-48">
         <div id="hero" className="flex flex-col items-center w-full gap-24">
