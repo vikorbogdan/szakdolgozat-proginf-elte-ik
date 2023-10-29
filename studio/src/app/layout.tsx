@@ -23,10 +23,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(
-          "min-h-screen font-sans antialiased grainy",
-          rubik.className
-        )}
+        className={cn("min-h-screen font-sans antialiased", rubik.className)}
       >
         <ThemeProvider
           attribute="class"

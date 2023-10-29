@@ -5,8 +5,9 @@ import { Rubik } from "next/font/google";
 import "../globals.css";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { getServerSession } from "next-auth";
-import Sidebar from "./dashboard/_components/Sidebar";
-import Navbar from "../(marketing)/_components/Navbar";
+import Sidebar from "./_components/Sidebar";
+import Navbar from "./_components/Navbar";
+import { redirect } from "next/navigation";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -21,11 +22,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession();
+  if (!session || !session.user) {
+    redirect("/");
+  }
+
   return (
     <html lang="en">
       <body
         className={cn(
-          "h-2 flex-col flex font-sans antialiased grainy",
+          "h-2 flex-col flex antialiased bg-primary-foreground",
           rubik.className
         )}
       >
@@ -36,6 +41,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <SessionProvider session={session}>
+            <Navbar />
             <div className="flex flex-row h-full">
               <Sidebar />
               {children}

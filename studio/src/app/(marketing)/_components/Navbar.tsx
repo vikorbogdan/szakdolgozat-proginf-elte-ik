@@ -2,14 +2,12 @@
 import AuthButton from "@/components/AuthButton";
 import useScrollTop from "@/hooks/useScrollTop";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import MaxWidthWrapper from "../../../components/MaxWidthWrapper";
 import { ModeToggle } from "../../../components/ModeToggle";
 
 const Navbar = () => {
   const scrolledDown = useScrollTop(100);
-  const session = useSession();
   return (
     <nav
       className={cn(
