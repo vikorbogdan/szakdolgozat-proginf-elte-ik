@@ -27,7 +27,7 @@ const AuthButton = ({
   ) : authStatus === "unauthenticated" ? (
     <Button
       className={cn(className, "")}
-      onClick={() => signIn(undefined, { callbackUrl: "/dashboard" })}
+      onClick={() => signIn(undefined, { callbackUrl: "/auth-callback" })}
       variant={"default"}
     >
       {signInLabel || "Sign In"}

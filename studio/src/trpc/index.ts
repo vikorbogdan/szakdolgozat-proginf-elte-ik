@@ -1,5 +1,39 @@
+import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "./trpc";
+import { Session, getServerSession } from "next-auth";
+import { db } from "@/db";
 export const appRouter = router({
+  authCallback: publicProcedure.query(async () => {
+    const session: Session | null = await getServerSession();
+    if (!session) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Session not found.",
+      });
+    }
+    const { user } = session;
+    if (!user?.email) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User has no e-mail associated with their profile.",
+      });
+    }
+    const dbUser = await db.user.findFirst({
+      where: {
+        email: user.email,
+      },
+    });
+    if (!dbUser) {
+      await db.user.create({
+        data: {
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        },
+      });
+    }
+    return { success: true };
+  }),
   splash: publicProcedure.query(() => {
     const splashTextArray = [
       "Where every lesson is a light bulb moment!",

@@ -1,15 +1,15 @@
 "use client";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import FeaturesCard from "@/app/(marketing)/_components/FeaturesCard";
 import ProcessFlowCard from "@/app/(marketing)/_components/ProcessFlowCard";
+import AuthButton from "@/components/AuthButton";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { Badge } from "@/components/ui/badge";
 import { BrainCircuit, Loader } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import waveLine from "src/svg/wave-line.svg";
-import AuthButton from "@/components/AuthButton";
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import waveLine from "src/svg/wave-line.svg";
 import { trpc } from "../_trpc/client";
 export default function Home() {
   const { data: userData } = useSession();

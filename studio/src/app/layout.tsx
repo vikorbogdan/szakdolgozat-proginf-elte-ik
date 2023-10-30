@@ -26,16 +26,16 @@ export default async function RootLayout({
       <body
         className={cn("min-h-screen font-sans antialiased", rubik.className)}
       >
-        <TRPCProviders>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TRPCProviders>
             <SessionProvider session={session}>{children}</SessionProvider>
-          </ThemeProvider>
-        </TRPCProviders>
+          </TRPCProviders>
+        </ThemeProvider>
       </body>
     </html>
   );
