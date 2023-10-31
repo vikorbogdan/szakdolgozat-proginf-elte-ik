@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const menuOptions = [
@@ -19,29 +19,31 @@ const Sidebar = () => {
     },
     {
       order: 1,
-      name: "Classes",
+      name: "Subject Groups",
       icon: Users2,
-      path: "/dashboard",
+      path: "/groups",
     },
     {
       order: 2,
-      name: "Lessons",
+      name: "Lesson Outlines",
       icon: Library,
-      path: "/dashboard",
+      path: "/lessons",
     },
     {
       order: 3,
-      name: "Study Blocks",
+      name: "Learning Blocks",
       icon: TextQuote,
-      path: "/dashboard",
+      path: "/blocks",
     },
   ];
-  const [selected, setSelected] = useState(0); // TODO: Change this to the current page being rendered
+  const router = useRouter();
+  const pathName = usePathname();
+  console.log(pathName);
+  const [selected, setSelected] = useState(pathName);
   const { data: session } = useSession();
   const { navbarOpen } = useClientStore();
   if (!session) return null;
   const userData = session.user;
-  console.log(navbarOpen);
   return (
     <motion.aside
       initial={{
@@ -54,7 +56,7 @@ const Sidebar = () => {
           ? "var(--opacity-animate)"
           : "var(--opacity-initial)",
       }}
-      className={`z-50 absolute lg:static text-foreground gap-8 flex-col h-screen flex lg:w-52 bg-background [--width-animate:100%] md:[--width-animate:13rem] [--width-initial:0%] lg:[--width-initial:13rem] [--opacity-initial:0] lg:[--opacity-initial:1] [--opacity-animate:1]`}
+      className={`z-50 absolute lg:static text-foreground gap-8 flex-col h-screen flex bg-background [--width-animate:100%] md:[--width-animate:13rem] [--width-initial:0%] lg:[--width-initial:13rem] [--opacity-initial:0] lg:[--opacity-initial:1] [--opacity-animate:1]`}
     >
       <div className="flex flex-col items-center mt-8 gap-3">
         <div className="h-20 w-20 relative">
@@ -75,16 +77,19 @@ const Sidebar = () => {
             return (
               <li
                 className={cn(
-                  menuElement.order === selected // TODO: Change this to a way of checking if the current page is the one being rendered
+                  menuElement.path === selected
                     ? "text-background bg-primary hover:bg-primary"
                     : "hover:bg-primary-foreground",
                   "transition-colors p-1 gap-2 cursor-pointer flex items-center rounded-[0.2rem]"
                 )}
                 key={menuElement.order}
-                onClick={() => setSelected(menuElement.order)}
+                onClick={() => {
+                  router.push(menuElement.path);
+                  setSelected(menuElement.path);
+                }}
               >
                 <menuElement.icon className="w-4 h-4" />
-                <Link href={menuElement.path}>{menuElement.name}</Link>
+                {menuElement.name}
               </li>
             );
           })}
