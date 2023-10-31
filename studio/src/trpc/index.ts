@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "./trpc";
 import { Session, getServerSession } from "next-auth";
 import { db } from "@/db";
+import { Prisma } from "@prisma/client";
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const session: Session | null = await getServerSession();
@@ -18,18 +19,19 @@ export const appRouter = router({
         message: "User has no e-mail associated with their profile.",
       });
     }
+    const userEmail = user.email;
     const dbUser = await db.user.findFirst({
       where: {
-        email: user.email,
+        email: userEmail,
       },
     });
     if (!dbUser) {
       await db.user.create({
         data: {
-          email: user.email,
+          email: userEmail,
           name: user.name,
           image: user.image,
-        },
+        } as Prisma.UserCreateInput,
       });
     }
     return { success: true };
