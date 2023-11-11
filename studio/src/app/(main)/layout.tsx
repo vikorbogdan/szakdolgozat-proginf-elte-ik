@@ -9,6 +9,7 @@ import Sidebar from "./_components/Sidebar";
 import Navbar from "./_components/Navbar";
 import { redirect } from "next/navigation";
 import TRPCProviders from "@/components/providers/Providers";
+import { EdgeStoreProvider } from "@/lib/edgestore";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -43,11 +44,13 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <SessionProvider session={session}>
-              <Navbar />
-              <div className="flex flex-row h-full">
-                <Sidebar />
-                {children}
-              </div>
+              <EdgeStoreProvider>
+                <Navbar />
+                <div className="flex flex-row h-full">
+                  <Sidebar />
+                  {children}
+                </div>
+              </EdgeStoreProvider>
             </SessionProvider>
           </ThemeProvider>
         </TRPCProviders>
