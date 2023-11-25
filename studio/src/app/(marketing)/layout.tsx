@@ -22,27 +22,18 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession();
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased grainy",
-          rubik.className
-        )}
+    <TRPCProviders>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        <TRPCProviders>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SessionProvider session={session}>
-              <Navbar />
-              {children}
-            </SessionProvider>
-          </ThemeProvider>
-        </TRPCProviders>
-      </body>
-    </html>
+        <SessionProvider session={session}>
+          <Navbar />
+          {children}
+        </SessionProvider>
+      </ThemeProvider>
+    </TRPCProviders>
   );
 }

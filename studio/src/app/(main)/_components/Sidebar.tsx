@@ -38,7 +38,6 @@ const Sidebar = () => {
   ];
   const router = useRouter();
   const pathName = usePathname();
-  console.log(pathName);
   const [selected, setSelected] = useState(pathName);
   const { data: session } = useSession();
   const { navbarOpen } = useClientStore();

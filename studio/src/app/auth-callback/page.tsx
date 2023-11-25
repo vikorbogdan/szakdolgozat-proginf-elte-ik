@@ -10,6 +10,12 @@ const Page = () => {
   const { isSuccess, isError } = trpc.authCallback.useQuery(undefined, {
     retry: true,
     retryDelay: 500,
+    onSuccess: () => {
+      console.log("Successfully authenticated");
+    },
+    onError: (err) => {
+      console.log("Failed authenticating: ", err);
+    },
   });
 
   useEffect(() => {

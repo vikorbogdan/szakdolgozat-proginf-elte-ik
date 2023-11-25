@@ -1,21 +1,17 @@
 import { useEdgeStore } from "@/lib/edgestore";
-import { useCallback, useEffect, useRef, useState } from "react";
-import type EditorJS from "@editorjs/editorjs";
 import { cn } from "@/lib/utils";
+import type EditorJS from "@editorjs/editorjs";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type EditorProps = {
   className?: string;
+  editorRef: React.MutableRefObject<EditorJS | undefined>;
 };
 
-const Editor = ({ className }: EditorProps) => {
-  const { edgestore } = useEdgeStore();
+const Editor = ({ className, editorRef }: EditorProps) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsMounted(true);
-    }
-  }, []);
-  const editorRef = useRef<EditorJS>();
+  const { edgestore } = useEdgeStore();
+
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
     const Header = (await import("@editorjs/header")).default;
@@ -74,15 +70,23 @@ const Editor = ({ className }: EditorProps) => {
     }
   }, []);
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMounted(true);
+    }
+  }, []);
+  useEffect(() => {
     const loadEditor = async () => {
       await initializeEditor();
     };
     if (isMounted) {
       loadEditor();
-      return () => {};
+      return () => {
+        editorRef.current?.destroy();
+        editorRef.current = undefined;
+      };
     }
   }, [isMounted, initializeEditor]);
-  return <div id="editor" className={cn(className)} />;
+  return <div id="editor" className={cn(className)}></div>;
 };
 
 export default Editor;

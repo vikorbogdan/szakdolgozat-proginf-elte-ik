@@ -1,4 +1,5 @@
 import { TextQuote } from "lucide-react";
+import BlockList from "./_components/BlockList";
 
 const Blocks = () => {
   return (
@@ -7,6 +8,7 @@ const Blocks = () => {
         <TextQuote className="h-14 w-14" />
         <h1 className="text-5xl font-semibold">Learning Blocks</h1>
       </div>
+      <BlockList />
     </div>
   );
 };

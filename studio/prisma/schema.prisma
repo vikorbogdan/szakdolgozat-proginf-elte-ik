@@ -8,53 +8,54 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   email     String   @unique
   name      String?
   role      Role     @default(USER)
   image     String?
-  lessons   Lesson[]
-  groups    Group[]  @relation("GroupToUser")
+  lessons   Lesson[] @relation("UserToLesson")
+  blocks    Block[]  @relation("UserToBlock")
+  groups    Group[]  @relation("UserToGroup")
 }
 
 model Group {
-  id      Int      @id @default(autoincrement())
+  id      String   @id @default(cuid())
   name    String
   subject String
   icon    String
-  lessons Lesson[]
-  users   User[]   @relation("GroupToUser")
+  lessons Lesson[] @relation("GroupToLesson")
+  blocks  Block[]  @relation("GroupToBlock")
+  users   User[]   @relation("UserToGroup")
 }
 
 model Lesson {
-  id      Int     @id @default(autoincrement())
+  id      String  @id @default(cuid())
   title   String
   content String
-  groupId Int?
-  userId  Int?
-  blocks  Block[]
   files   File[]
-  group   Group?  @relation(fields: [groupId], references: [id])
-  User    User?   @relation(fields: [userId], references: [id])
+  blocks  Block[] @relation("LessonToBlock")
+  users   User[]  @relation("UserToLesson")
+  groups  Group[] @relation("GroupToLesson")
 }
 
 model Block {
-  id       Int     @id @default(autoincrement())
+  id       String   @id @default(cuid())
   title    String
-  content  String
+  content  String?
   duration Int
-  lessonId Int?
-  lesson   Lesson? @relation(fields: [lessonId], references: [id])
+  lessons  Lesson[] @relation("LessonToBlock")
+  users    User[]   @relation("UserToBlock")
+  groups   Group[]  @relation("GroupToBlock")
 }
 
 model File {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
   path      String
-  lessonId  Int?
+  lessonId  String?
   lesson    Lesson?  @relation(fields: [lessonId], references: [id])
 }
 

@@ -116,5 +116,6 @@ div[class^="ce-toolbar__"] svg{
   @apply dark:text-gray-500;
 }
 .cdx-button{
-  @apply bg-red-500;
+  @apply bg-white;
 }
+

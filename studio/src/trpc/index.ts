@@ -3,6 +3,32 @@ import { publicProcedure, router } from "./trpc";
 import { Session, getServerSession } from "next-auth";
 import { db } from "@/db";
 import { Prisma } from "@prisma/client";
+import { BlockValidator } from "@/lib/validators/block";
+
+export const blocksRouter = router({
+  list: publicProcedure.query(async () => {
+    const blocks = await db.block.findMany();
+    return blocks.map((block) => ({
+      id: block.id,
+      title: block.title,
+      duration: block.duration,
+      content: null,
+    }));
+  }),
+
+  create: publicProcedure.input(BlockValidator).mutation(async (input) => {
+    const { input: block } = input;
+    await db.block.create({
+      data: {
+        title: block.title,
+        content: block.content,
+        duration: block.duration,
+      },
+    });
+    return { success: true };
+  }),
+});
+
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const session: Session | null = await getServerSession();
@@ -123,7 +149,9 @@ export const appRouter = router({
       splashTextArray[Math.floor(Math.random() * splashTextArray.length)]
     } ${randomEmojis.join("")}`;
   }),
+  blocks: blocksRouter,
 });
+
 // Export type router type signature,
 // NOT the router itself.
 export type AppRouter = typeof appRouter;

@@ -29,32 +29,23 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "h-2 flex-col flex antialiased bg-primary-foreground",
-          rubik.className
-        )}
+    <TRPCProviders>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        <TRPCProviders>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SessionProvider session={session}>
-              <EdgeStoreProvider>
-                <Navbar />
-                <div className="flex flex-row h-full">
-                  <Sidebar />
-                  {children}
-                </div>
-              </EdgeStoreProvider>
-            </SessionProvider>
-          </ThemeProvider>
-        </TRPCProviders>
-      </body>
-    </html>
+        <SessionProvider session={session}>
+          <EdgeStoreProvider>
+            <Navbar />
+            <div className="flex flex-row h-full">
+              <Sidebar />
+              {children}
+            </div>
+          </EdgeStoreProvider>
+        </SessionProvider>
+      </ThemeProvider>
+    </TRPCProviders>
   );
 }
