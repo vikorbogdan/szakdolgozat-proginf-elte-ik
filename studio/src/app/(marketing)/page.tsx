@@ -15,7 +15,11 @@ export default function Home() {
   const { data: userData } = useSession();
   if (userData) redirect("/dashboard");
   const { data: splashText, isLoading: isSplashTextLoading } =
-    trpc.splash.useQuery();
+    trpc.splash.useQuery(undefined, {
+      onError: (error) => {
+        console.error(error);
+      },
+    });
   return (
     <MaxWidthWrapper className="mb-12 mt-14 flex flex-col items-center justify-center text-center">
       <Badge className="rounded-full select-none drop-shadow-lg font-normal md:px-6 md:py-2 md:text-md animate-bounce">

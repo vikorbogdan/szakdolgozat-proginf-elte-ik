@@ -14,7 +14,7 @@ const BlockList = () => {
     );
   }
   return (
-    <ul>
+    <ul className="flex flex-col gap-4">
       {blocks?.map((block) => (
         <BlockListItem key={block.id} block={block} />
       ))}

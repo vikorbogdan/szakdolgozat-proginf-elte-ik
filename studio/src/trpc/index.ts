@@ -1,28 +1,163 @@
 import { TRPCError } from "@trpc/server";
-import { publicProcedure, router } from "./trpc";
+import { privateProcedure, publicProcedure, router } from "./trpc";
 import { Session, getServerSession } from "next-auth";
 import { db } from "@/db";
 import { Prisma } from "@prisma/client";
 import { BlockValidator } from "@/lib/validators/block";
+import { z } from "zod";
 
 export const blocksRouter = router({
-  list: publicProcedure.query(async () => {
-    const blocks = await db.block.findMany();
-    return blocks.map((block) => ({
+  // listAll: publicProcedure.query(async () => {
+  //   const blocks = await db.block.findMany();
+  //   return blocks.map((block) => ({
+  //     id: block.id,
+  //     title: block.title,
+  //     duration: block.duration,
+  //     content: null,
+  //   }));
+  // }),
+
+  list: privateProcedure.query(async () => {
+    const session: Session | null = await getServerSession();
+    if (!session) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Session not found.",
+      });
+    }
+    const { user } = session;
+    if (!user?.email) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User has no e-mail associated with their profile.",
+      });
+    }
+    const userEmail = user.email;
+    const dbUser = await db.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+      include: {
+        blocks: true,
+      },
+    });
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found.",
+      });
+    }
+    return dbUser.blocks.map((block) => ({
       id: block.id,
       title: block.title,
       duration: block.duration,
-      content: null,
+      content: block.content,
     }));
   }),
 
-  create: publicProcedure.input(BlockValidator).mutation(async (input) => {
-    const { input: block } = input;
-    await db.block.create({
+  getBlockById: publicProcedure.input(z.string()).query(async (opts) => {
+    const { input: id } = opts;
+    const block = await db.block.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (!block) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Block not found.",
+      });
+    }
+    return {
+      id: block.id,
+      title: block.title,
+      duration: block.duration,
+      content: block.content,
+    };
+  }),
+
+  create: privateProcedure.input(BlockValidator).mutation(async (opts) => {
+    const { input: blockData } = opts;
+    const session: Session | null = await getServerSession();
+    if (!session) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Session not found.",
+      });
+    }
+    const { user } = session;
+    if (!user?.email) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User has no e-mail associated with their profile.",
+      });
+    }
+    const userEmail = user.email;
+    const dbUser = await db.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found.",
+      });
+    }
+    await db.user.update({
+      where: {
+        email: dbUser.email,
+      },
       data: {
-        title: block.title,
-        content: block.content,
-        duration: block.duration,
+        blocks: {
+          create: {
+            title: blockData.title,
+            content: blockData.content,
+            duration: blockData.duration,
+          },
+        },
+      },
+    });
+    return { success: true };
+  }),
+  delete: privateProcedure.input(z.string()).mutation(async (opts) => {
+    const { input: id } = opts;
+    const session: Session | null = await getServerSession();
+    if (!session) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Session not found.",
+      });
+    }
+    const { user } = session;
+    if (!user?.email) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User has no e-mail associated with their profile.",
+      });
+    }
+    const userEmail = user.email;
+    const dbUser = await db.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found.",
+      });
+    }
+    await db.user.update({
+      where: {
+        email: dbUser.email,
+      },
+      data: {
+        blocks: {
+          delete: {
+            id,
+          },
+        },
       },
     });
     return { success: true };
@@ -62,6 +197,7 @@ export const appRouter = router({
     }
     return { success: true };
   }),
+
   splash: publicProcedure.query(() => {
     const splashTextArray = [
       "Where every lesson is a light bulb moment!",
@@ -149,6 +285,7 @@ export const appRouter = router({
       splashTextArray[Math.floor(Math.random() * splashTextArray.length)]
     } ${randomEmojis.join("")}`;
   }),
+
   blocks: blocksRouter,
 });
 
