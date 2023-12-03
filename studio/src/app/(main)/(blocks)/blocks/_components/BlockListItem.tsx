@@ -3,7 +3,7 @@ import { formatDuration } from "@/lib/utils";
 import { Block } from "@prisma/client";
 import { ArrowBigRight, Clock, Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
-import DeleteListItemButton from "./DeleteListItemButton";
+import DeleteBlockListItemButton from "./DeleteBlockListItemButton";
 import { useState } from "react";
 
 type BlockListItemProps = {
@@ -28,15 +28,17 @@ const BlockListItem = ({ block }: BlockListItemProps) => {
             </span>
           </Link>
           <div className="flex gap-2 items-center">
-            <Clock className="w-5 h-5" />
             {/*
         TODO: Add more details to the block list item like tags, etc.
       */}
-            <span>{formatDuration(block.duration)}</span>
-            <DeleteListItemButton
+            <div className="flex gap-1 items-center">
+              <span>{formatDuration(block.duration)}</span>
+              <Clock className="w-5 h-5" />
+            </div>
+            <DeleteBlockListItemButton
               setIsDeleteLoading={setIsDeleteLoading}
               blockId={block.id}
-            ></DeleteListItemButton>
+            ></DeleteBlockListItemButton>
           </div>
         </>
       )}

@@ -9,7 +9,8 @@ export const cn = (...inputs: ClassValue[]) => {
 export const formatDuration = (duration: number) => {
   const hours = Math.floor(duration / 60);
   const minutes = duration % 60;
-  return `${hours}h ${minutes}m`;
+  const hoursString = hours > 0 ? `${hours}h ` : "";
+  return `${hoursString}${minutes}m`;
 };
 
 const htmlDecode = (text: string) => {

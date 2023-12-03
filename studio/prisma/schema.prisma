@@ -30,23 +30,22 @@ model Group {
 }
 
 model Lesson {
-  id      String  @id @default(cuid())
-  title   String
-  content String
-  files   File[]
-  blocks  Block[] @relation("LessonToBlock")
-  users   User[]  @relation("UserToLesson")
-  groups  Group[] @relation("GroupToLesson")
+  id          String        @id @default(cuid())
+  title       String
+  files       File[]
+  users       User[]        @relation("UserToLesson")
+  groups      Group[]       @relation("GroupToLesson")
+  LessonBlock LessonBlock[]
 }
 
 model Block {
-  id       String   @id @default(cuid())
-  title    String
-  content  String?
-  duration Int
-  lessons  Lesson[] @relation("LessonToBlock")
-  users    User[]   @relation("UserToBlock")
-  groups   Group[]  @relation("GroupToBlock")
+  id          String        @id @default(cuid())
+  title       String
+  content     String?
+  duration    Int
+  users       User[]        @relation("UserToBlock")
+  groups      Group[]       @relation("GroupToBlock")
+  LessonBlock LessonBlock[]
 }
 
 model File {
@@ -57,6 +56,18 @@ model File {
   path      String
   lessonId  String?
   lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+}
+
+model LessonBlock {
+  id       String @id @default(cuid())
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+  lessonId String
+  block    Block  @relation(fields: [blockId], references: [id])
+  blockId  String
+  order    Int // Field to store the order of the block in the lesson
+  instance Int // Field to handle multiple instances of the same block
+
+  @@unique([lessonId, blockId, instance])
 }
 
 enum Role {

@@ -13,15 +13,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useEffect } from "react";
-type DeleteListItemButtonProps = {
+type DeleteBlockListItemButtonProps = {
   setIsDeleteLoading: (value: boolean) => void;
   blockId: string;
 };
 
-const DeleteListItemButton = ({
+const DeleteBlockListItemButton = ({
   blockId,
   setIsDeleteLoading,
-}: DeleteListItemButtonProps) => {
+}: DeleteBlockListItemButtonProps) => {
   const trpcUtils = trpc.useUtils();
   const { mutate: deleteBlockMutation, isLoading: isDeleteBlockLoading } =
     trpc.blocks.delete.useMutation({
@@ -68,4 +68,4 @@ const DeleteListItemButton = ({
   );
 };
 
-export default DeleteListItemButton;
+export default DeleteBlockListItemButton;

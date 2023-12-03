@@ -10,7 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/app/_trpc/client";
-const CreateBlockForm = () => {
+import { useRouter } from "next/navigation";
+const CreateNewBlockForm = () => {
   const [currentDuration, setCurrentDuration] = useState<number>(5);
   const {
     register,
@@ -31,6 +32,8 @@ const CreateBlockForm = () => {
   const editorRef = useRef<EditorJS>();
   const { mutate: createBlockMutation, isLoading: isCreateBlockLoading } =
     trpc.blocks.create.useMutation();
+  //TODO: Better loading state after creating block
+  const router = useRouter();
   useEffect(() => {
     setFocus("title");
   }, [setFocus]);
@@ -42,6 +45,7 @@ const CreateBlockForm = () => {
     }
   }, [errors]);
   async function onSubmit(data: NewBlockRequest) {
+    //TODO: Better name for this function
     const blocks = await editorRef.current?.save();
     const payload: NewBlockRequest = {
       title: data.title,
@@ -53,7 +57,10 @@ const CreateBlockForm = () => {
       onError: (err) => {
         console.log("Failed creating block: ", err);
       },
-      onSuccess: () => console.log("Successfully created block"),
+      onSuccess: () => {
+        console.log("Successfully created block");
+        router.push("/blocks");
+      },
     });
   }
   return (
@@ -97,12 +104,13 @@ const CreateBlockForm = () => {
       <input
         type="submit"
         value="Create Block"
+        disabled={isCreateBlockLoading}
         className={`bg-primary w-36 text-primary-background py-2 px-4 rounded-lg ${
-          isCreateBlockLoading ? "opacity-50 disabled" : ""
+          isCreateBlockLoading ? "opacity-50 cursor-not-allowed" : ""
         } $}`}
       />
     </form>
   );
 };
 
-export default CreateBlockForm;
+export default CreateNewBlockForm;

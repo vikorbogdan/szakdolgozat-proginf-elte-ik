@@ -2,7 +2,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft, PlusSquare } from "lucide-react";
 import Link from "next/link";
-import CreateBlockForm from "./_components/CreateBlockForm";
+import CreateNewBlockForm from "./_components/CreateNewBlockForm";
 
 const NewBlock = () => {
   return (
@@ -21,7 +21,7 @@ const NewBlock = () => {
           <ArrowLeft className="w-5 h-5" /> Learning Blocks
         </Link>
       </div>
-      <CreateBlockForm />
+      <CreateNewBlockForm />
     </div>
   );
 };

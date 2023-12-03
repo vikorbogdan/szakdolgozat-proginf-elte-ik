@@ -1,4 +1,5 @@
 import { EditorBlock } from "@/types/EditorJS";
+import { Highlight, themes } from "prism-react-renderer";
 import { parseText } from "@/lib/utils";
 import {
   Table,
@@ -9,11 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTheme } from "next-themes";
+import CopyButton from "./CopyButton";
 type EditorJSParserProps = {
   block: EditorBlock;
 };
 
 const EditorJSParser = ({ block }: EditorJSParserProps) => {
+  const { theme } = useTheme();
   switch (block.type) {
     case "header":
       switch (block.data.level) {
@@ -49,18 +53,60 @@ const EditorJSParser = ({ block }: EditorJSParserProps) => {
     case "paragraph":
       return <p className="my-2">{parseText(block.data.text)}</p>;
     case "list":
-      return (
-        <ul>
-          {block.data.items.map((item, idx) => (
-            <li key={idx}>{parseText(item)}</li>
-          ))}
-        </ul>
-      );
+      switch (block.data.style) {
+        case "ordered":
+          return (
+            <ol className="list-decimal list-inside">
+              {block.data.items.map((item, idx) => (
+                <li key={idx}>{parseText(item)}</li>
+              ))}
+            </ol>
+          );
+        case "unordered":
+          return (
+            <ul className="list-disc list-inside">
+              {block.data.items.map((item, idx) => (
+                <li key={idx}>{parseText(item)}</li>
+              ))}
+            </ul>
+          );
+        default:
+          return (
+            <div className="text-red-500">
+              Error: Unsupported list style({block.data.style})
+            </div>
+          );
+      }
     case "code":
       return (
-        <pre className="bg-card p-5 border-2 border-muted rounded-xl">
-          <code>{block.data.code}</code>
-        </pre>
+        <div className="my-2 bg-card p-5 border-2 relative border-muted rounded-xl">
+          <CopyButton
+            text={block.data.code}
+            className="absolute right-7 top-7"
+          />
+          <Highlight
+            theme={
+              theme === "light" ? themes.jettwaveLight : themes.jettwaveDark
+            }
+            code={block.data.code}
+            language={"javascript"}
+          >
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <pre className="overflow-x-auto text-sm rounded-" style={style}>
+                {tokens.map((line, i) => (
+                  <div key={i} {...getLineProps({ line })}>
+                    <span className="text-gray-500 mr-4 select-none">
+                      {i + 1}
+                    </span>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token })} />
+                    ))}
+                  </div>
+                ))}
+              </pre>
+            )}
+          </Highlight>
+        </div>
       );
     case "table":
       if (block.data.withHeadings) {
@@ -100,7 +146,7 @@ const EditorJSParser = ({ block }: EditorJSParserProps) => {
         );
       }
     case "image":
-      return <img className="max-w-3xl mx-auto" src={block.data.file.url} />;
+      return <img className="max-w-full mx-auto" src={block.data.file.url} />;
     case "linkTool":
       return (
         <a href={block.data.link} target="_blank" rel="noopener noreferrer">
