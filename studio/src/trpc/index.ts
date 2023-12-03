@@ -1,12 +1,10 @@
-import { TRPCError } from "@trpc/server";
-import { privateProcedure, publicProcedure, router } from "./trpc";
-import { Session, getServerSession } from "next-auth";
 import { db } from "@/db";
 import { Prisma } from "@prisma/client";
-import { BlockValidator } from "@/lib/validators/block";
-import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { Session, getServerSession } from "next-auth";
 import { blockRouter } from "./(routers)/blockRouter";
 import { lessonRouter } from "./(routers)/lessonRouter";
+import { publicProcedure, router } from "./trpc";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
