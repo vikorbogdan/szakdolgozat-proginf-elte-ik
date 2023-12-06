@@ -16,4 +16,4 @@ export const BlockValidator = z.object({
   tags: z.array(z.string().max(32)),
 });
 
-export type NewBlockRequest = z.infer<typeof BlockValidator>;
+export type BlockRequest = z.infer<typeof BlockValidator>;

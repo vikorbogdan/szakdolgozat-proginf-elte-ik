@@ -7,10 +7,11 @@ import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import { cn, formatDuration } from "@/lib/utils";
 import { Clock, Edit } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const LessonOutlinePage = () => {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const { data: lessonData, isLoading: lessonDataIsLoading } =
     trpc.lessons.getLessonById.useQuery(id);
   if (lessonDataIsLoading) return <LoadingPage />;
@@ -36,6 +37,9 @@ const LessonOutlinePage = () => {
               <CardHeader className="flex items-center flex-row w-full justify-between">
                 <Button
                   variant={"outline"}
+                  onClick={() => {
+                    router.push(`/blocks/${block.id}/edit`);
+                  }}
                   className="flex text-sm items-center gap-1"
                 >
                   <Edit className="w-4 h-4 text-muted-foreground" />

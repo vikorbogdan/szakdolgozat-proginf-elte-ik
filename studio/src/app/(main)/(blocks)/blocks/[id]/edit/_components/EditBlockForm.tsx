@@ -5,18 +5,20 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { formatDuration } from "@/lib/utils";
 import { BlockValidator, BlockRequest } from "@/lib/validators/block";
-import type EditorJS from "@editorjs/editorjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/app/_trpc/client";
-import { useRouter } from "next/navigation";
-const CreateNewBlockForm = () => {
+import type EditorJS from "@editorjs/editorjs";
+import { useParams, useRouter } from "next/navigation";
+import LoadingPage from "@/components/LoadingPage";
+const EditBlockForm = () => {
   const [currentDuration, setCurrentDuration] = useState<number>(5);
   const {
     register,
     handleSubmit,
     setFocus,
+    setValue,
     getValues,
     formState: { errors },
   } = useForm<BlockRequest>({
@@ -30,9 +32,22 @@ const CreateNewBlockForm = () => {
   });
 
   const editorRef = useRef<EditorJS>();
-  const { mutate: createBlockMutation, isLoading: isCreateBlockLoading } =
-    trpc.blocks.create.useMutation();
-  //TODO: Better loading state after creating block
+  const { id: blockId } = useParams();
+  const { data: blockData } = trpc.blocks.getBlockById.useQuery(
+    blockId as string,
+    {
+      onSuccess: (data) => {
+        setValue("title", data.title);
+        setValue("duration", data.duration);
+        // setValue("tags", data.tags);
+        setCurrentDuration(data.duration);
+      },
+    }
+  );
+  console.log(blockData);
+  const { mutate: editBlockMutation, isLoading: isEditBlockLoading } =
+    trpc.blocks.edit.useMutation();
+  //TODO: Better loading state after changing block
   const router = useRouter();
   useEffect(() => {
     setFocus("title");
@@ -53,15 +68,22 @@ const CreateNewBlockForm = () => {
       duration: currentDuration,
       tags: data.tags,
     };
-    createBlockMutation(payload, {
-      onError: (err) => {
-        console.log("Failed creating block: ", err);
-      },
-      onSuccess: () => {
-        console.log("Successfully created block");
-        router.push("/blocks");
-      },
-    });
+    if (typeof blockId === "string")
+      editBlockMutation(
+        {
+          blockId,
+          blockData: payload,
+        },
+        {
+          onError: (err) => {
+            console.log("Failed creating block: ", err);
+          },
+          onSuccess: () => {
+            console.log("Successfully created block");
+            router.push("/blocks");
+          },
+        }
+      );
   }
   return (
     <form
@@ -71,11 +93,11 @@ const CreateNewBlockForm = () => {
       })}
     >
       <div className="flex flex-col gap-4">
-        <Label htmlFor="title">Add Title</Label>
+        <Label htmlFor="title">Title</Label>
         <Input id="title" {...register("title")} />
       </div>
       <div className="flex flex-col gap-4">
-        <Label htmlFor="duration">Set Duration of Learning Block</Label>
+        <Label htmlFor="duration">Duration of Learning Block</Label>
         <div className="flex">
           <Slider
             id="duration"
@@ -95,7 +117,15 @@ const CreateNewBlockForm = () => {
       </div>
       <div className="flex flex-col gap-4">
         <label htmlFor="content">Edit Content</label>
-        <Editor editorRef={editorRef} className="bg-none border-2" />
+        {blockData?.content ? (
+          <Editor
+            editorRef={editorRef}
+            initialData={JSON.parse(blockData?.content || "")}
+            className="bg-none border-2"
+          />
+        ) : (
+          <LoadingPage />
+        )}
       </div>
       <div className="flex flex-col gap-4">
         <label htmlFor="tags">Tags</label>
@@ -103,14 +133,14 @@ const CreateNewBlockForm = () => {
       </div>
       <input
         type="submit"
-        value="Create Block"
-        disabled={isCreateBlockLoading}
+        value="Save Changes"
+        disabled={isEditBlockLoading}
         className={`bg-primary w-36 text-primary-background py-2 px-4 rounded-lg ${
-          isCreateBlockLoading ? "opacity-50 cursor-not-allowed" : ""
+          isEditBlockLoading ? "opacity-50 cursor-not-allowed" : ""
         } $}`}
       />
     </form>
   );
 };
 
-export default CreateNewBlockForm;
+export default EditBlockForm;

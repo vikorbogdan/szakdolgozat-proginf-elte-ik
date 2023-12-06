@@ -162,4 +162,62 @@ export const blockRouter = router({
     });
     return { success: true };
   }),
+  edit: privateProcedure
+    .input(
+      z.object({
+        blockId: z.string(),
+        blockData: BlockValidator,
+      })
+    )
+    .mutation(async (opts) => {
+      const {
+        input: { blockId, blockData },
+      } = opts;
+      const session: Session | null = await getServerSession();
+      if (!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Session not found.",
+        });
+      }
+      const { user } = session;
+      if (!user?.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User has no e-mail associated with their profile.",
+        });
+      }
+      const userEmail = user.email;
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: userEmail,
+        },
+      });
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+      await db.user.update({
+        where: {
+          email: dbUser.email,
+        },
+        data: {
+          blocks: {
+            update: {
+              where: {
+                id: blockId,
+              },
+              data: {
+                title: blockData.title,
+                content: blockData.content,
+                duration: blockData.duration,
+              },
+            },
+          },
+        },
+      });
+      return { success: true };
+    }),
 });

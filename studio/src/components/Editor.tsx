@@ -1,14 +1,17 @@
+"use client";
 import { useEdgeStore } from "@/lib/edgestore";
 import { cn } from "@/lib/utils";
+import { EditorOutput } from "@/types/EditorJS";
 import type EditorJS from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type EditorProps = {
   className?: string;
   editorRef: React.MutableRefObject<EditorJS | undefined>;
+  initialData?: EditorOutput;
 };
 
-const Editor = ({ className, editorRef }: EditorProps) => {
+const Editor = ({ className, editorRef, initialData }: EditorProps) => {
   const [isMounted, setIsMounted] = useState<boolean>(false);
   const { edgestore } = useEdgeStore();
 
@@ -30,7 +33,7 @@ const Editor = ({ className, editorRef }: EditorProps) => {
         },
         placeholder: "Start writing your block here...",
         inlineToolbar: true,
-        data: { blocks: [] },
+        data: initialData ? initialData : { blocks: [] },
         tools: {
           header: Header,
           list: List,
