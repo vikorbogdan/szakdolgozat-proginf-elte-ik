@@ -121,7 +121,7 @@ export const blockRouter = router({
     return { success: true };
   }),
   delete: privateProcedure.input(z.string()).mutation(async (opts) => {
-    const { input: id } = opts;
+    const { input: blockId } = opts;
     const session: Session | null = await getServerSession();
     if (!session) {
       throw new TRPCError({
@@ -148,6 +148,11 @@ export const blockRouter = router({
         message: "User not found.",
       });
     }
+    await db.lessonBlock.deleteMany({
+      where: {
+        blockId,
+      },
+    });
     await db.user.update({
       where: {
         email: dbUser.email,
@@ -155,7 +160,7 @@ export const blockRouter = router({
       data: {
         blocks: {
           delete: {
-            id,
+            id: blockId,
           },
         },
       },
