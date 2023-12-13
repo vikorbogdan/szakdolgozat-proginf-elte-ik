@@ -20,13 +20,13 @@ model User {
 }
 
 model Group {
-  id      String   @id @default(cuid())
-  name    String
-  subject String
-  icon    String
-  lessons Lesson[] @relation("GroupToLesson")
-  blocks  Block[]  @relation("GroupToBlock")
-  users   User[]   @relation("UserToGroup")
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  icon        String // emoji
+  lessons     Lesson[] @relation("GroupToLesson")
+  blocks      Block[]  @relation("GroupToBlock")
+  users       User[]   @relation("UserToGroup")
 }
 
 model Lesson {

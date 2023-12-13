@@ -51,7 +51,7 @@ const DeleteBlockListItemButton = ({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
-            block.
+            block. (Removing it from any Lesson Outline it is in)
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

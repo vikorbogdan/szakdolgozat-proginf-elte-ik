@@ -5,6 +5,7 @@ import { Session, getServerSession } from "next-auth";
 import { blockRouter } from "./(routers)/blockRouter";
 import { lessonRouter } from "./(routers)/lessonRouter";
 import { publicProcedure, router } from "./trpc";
+import { groupRouter } from "./(routers)/groupRouter";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -127,7 +128,7 @@ export const appRouter = router({
       splashTextArray[Math.floor(Math.random() * splashTextArray.length)]
     } ${randomEmojis.join("")}`;
   }),
-
+  groups: groupRouter,
   blocks: blockRouter,
   lessons: lessonRouter,
 });
