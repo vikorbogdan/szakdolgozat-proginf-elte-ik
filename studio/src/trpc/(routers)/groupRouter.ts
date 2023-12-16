@@ -38,6 +38,8 @@ export const groupRouter = router({
         name: true,
         description: true,
         icon: true,
+        users: true,
+        ownerId: true,
       },
       where: {
         users: {
@@ -47,7 +49,18 @@ export const groupRouter = router({
         },
       },
     });
-    return groups;
+    // create an array to return that contains id, name, description, icon, and the number of users in the group
+    const groupList = groups.map((group) => {
+      return {
+        id: group.id,
+        name: group.name,
+        description: group.description,
+        icon: group.icon,
+        users: group.users.length,
+        ownerId: group.ownerId,
+      };
+    });
+    return groupList;
   }),
   create: privateProcedure
     .input(
@@ -87,6 +100,7 @@ export const groupRouter = router({
       }
       const group = await db.group.create({
         data: {
+          ownerId: dbUser.id,
           name: input.name,
           description: input.description,
           icon: input.icon,

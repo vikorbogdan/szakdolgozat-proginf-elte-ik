@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
-  role      Role     @default(USER)
-  image     String?
-  lessons   Lesson[] @relation("UserToLesson")
-  blocks    Block[]  @relation("UserToBlock")
-  groups    Group[]  @relation("UserToGroup")
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  email       String   @unique
+  name        String?
+  role        Role     @default(USER)
+  image       String?
+  lessons     Lesson[] @relation("UserToLesson")
+  blocks      Block[]  @relation("UserToBlock")
+  groups      Group[]  @relation("UserToGroup")
+  ownedGroups Group[]  @relation("GroupOwner")
 }
 
 model Group {
@@ -27,6 +28,8 @@ model Group {
   lessons     Lesson[] @relation("GroupToLesson")
   blocks      Block[]  @relation("GroupToBlock")
   users       User[]   @relation("UserToGroup")
+  ownerId     String
+  User        User     @relation("GroupOwner", fields: [ownerId], references: [id])
 }
 
 model Lesson {
