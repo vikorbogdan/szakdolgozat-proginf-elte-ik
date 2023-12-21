@@ -3,7 +3,7 @@ import { privateProcedure, router } from "../trpc";
 import { db } from "@/db";
 import { getServerSession } from "next-auth";
 import { Session } from "next-auth";
-import { TRPCError } from "@trpc/server";
+import { TRPCError, inferRouterOutputs } from "@trpc/server";
 
 export const lessonRouter = router({
   list: privateProcedure.query(async () => {
@@ -72,6 +72,80 @@ export const lessonRouter = router({
       };
     });
   }),
+  listAvailableForGroup: privateProcedure
+    .input(z.string())
+    .query(async (opts) => {
+      const { input: groupId } = opts;
+      const session: Session | null = await getServerSession();
+      if (!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Session not found.",
+        });
+      }
+      const { user } = session;
+      if (!user?.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User has no e-mail associated with their profile.",
+        });
+      }
+      const userEmail = user.email;
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: userEmail,
+        },
+      });
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+      const lessons = await db.lesson.findMany({
+        select: {
+          id: true,
+          title: true,
+          LessonBlock: {
+            select: {
+              block: {
+                select: {
+                  id: true,
+                  title: true,
+                  duration: true,
+                  content: true,
+                },
+              },
+            },
+            orderBy: {
+              order: "asc",
+            },
+          },
+        },
+        where: {
+          users: {
+            some: {
+              id: dbUser.id,
+            },
+          },
+          groups: {
+            none: {
+              id: groupId,
+            },
+          },
+        },
+      });
+      return lessons.map((lesson) => {
+        return {
+          id: lesson.id,
+          title: lesson.title,
+          duration: lesson.LessonBlock.reduce((sum, lessonBlock) => {
+            return sum + lessonBlock.block.duration;
+          }, 0),
+          numOfBlocks: lesson.LessonBlock.length,
+        };
+      });
+    }),
   /**
    * List all lessons.
    * @returns An array of all lessons.
@@ -336,3 +410,10 @@ export const lessonRouter = router({
       };
     }),
 });
+
+type LessonRouter = typeof lessonRouter;
+
+type LessonRouterOutput = inferRouterOutputs<LessonRouter>;
+
+export type LessonListAvailableForGroupOutput =
+  LessonRouterOutput["listAvailableForGroup"];

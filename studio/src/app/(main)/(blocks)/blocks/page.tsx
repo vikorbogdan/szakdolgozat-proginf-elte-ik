@@ -9,7 +9,7 @@ const Blocks = () => {
       <div className="flex justify-between w-full items-center">
         <div className="flex items-center gap-4">
           <TextQuote className="h-14 w-14" />
-          <h1 className="text-5xl font-semibold">Learning Blocks</h1>
+          <h1 className="md:text-5xl text-xl font-semibold">Learning Blocks</h1>
         </div>
         <Link
           href={{

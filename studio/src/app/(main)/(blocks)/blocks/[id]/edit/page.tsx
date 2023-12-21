@@ -10,7 +10,7 @@ const EditBlock = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <PlusSquare className="w-14 h-14" />
-          <h1 className="text-5xl font-semibold">Edit Block</h1>
+          <h1 className="md:text-5xl text-xl font-semibold">Edit Block</h1>
         </div>
         <Link
           href={{

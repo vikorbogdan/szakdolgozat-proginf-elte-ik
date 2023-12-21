@@ -31,9 +31,9 @@ const EditGroupButton = ({ groupId, isCompact }: EditGroupButtonProps) => {
       ) : (
         <DialogTrigger
           onClick={() => setIsDialogOpen(true)}
-          className={buttonVariants({ variant: "default" })}
+          className={cn("text-4xl", buttonVariants({ variant: "default" }))}
         >
-          Edit Group
+          Edit
         </DialogTrigger>
       )}
       <DialogContent>

@@ -7,7 +7,7 @@ const Dashboard = () => {
   const { data: session } = useSession();
   return (
     <div className="flex p-4 md:p-16 gap-16 bg-primary-foreground min-h-screen h-full w-full flex-col">
-      <h1 className="text-5xl font-semibold">
+      <h1 className="md:text-5xl text-xl font-semibold">
         Welcome to your Dashboard, {session?.user?.name}!
       </h1>
       <main>

@@ -193,6 +193,7 @@ export const groupRouter = router({
       where: { id: groupId },
       include: {
         users: true,
+        lessons: true,
       },
     });
     return group;
@@ -249,6 +250,76 @@ export const groupRouter = router({
           name: input.name,
           description: input.description,
           icon: input.icon,
+        },
+      });
+      return updatedGroup;
+    }),
+  addLessonsToGroup: privateProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        lessonIds: z.array(z.string()),
+      })
+    )
+    .mutation(async (opts) => {
+      const { input } = opts;
+      const session: Session | null = await getServerSession();
+      if (!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Session not found.",
+        });
+      }
+      const { user } = session;
+      if (!user?.email) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User has no e-mail associated with their profile.",
+        });
+      }
+      const userEmail = user.email;
+      const dbUser = await db.user.findFirst({
+        where: {
+          email: userEmail,
+        },
+      });
+      if (!dbUser) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+      const group = await db.group.findUnique({
+        where: { id: input.groupId },
+      });
+      if (!group) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Group not found.",
+        });
+      }
+      const lessons = await db.lesson.findMany({
+        where: {
+          id: {
+            in: input.lessonIds,
+          },
+        },
+      });
+      if (!lessons) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lessons not found.",
+        });
+      }
+      const updatedGroup = await db.group.update({
+        where: { id: input.groupId },
+        data: {
+          lessons: {
+            connect: lessons.map((lesson) => ({ id: lesson.id })),
+          },
+        },
+        include: {
+          lessons: true,
         },
       });
       return updatedGroup;
