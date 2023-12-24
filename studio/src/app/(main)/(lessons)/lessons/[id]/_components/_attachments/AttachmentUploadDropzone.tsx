@@ -76,7 +76,6 @@ const AttachmentUploadDropzone = ({
       });
 
     if (!res) return;
-    console.log(res);
     uploadAttachment({
       lessonId,
       contentType: file.type,

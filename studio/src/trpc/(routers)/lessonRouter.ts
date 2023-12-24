@@ -412,7 +412,6 @@ export const lessonRouter = router({
     )
     .mutation(async (opts) => {
       const { input } = opts;
-      console.log(input);
       const lesson = await db.lesson.findUnique({
         where: { id: input.lessonId },
         include: {
@@ -434,15 +433,12 @@ export const lessonRouter = router({
       const oldBlockIds = lessonBlocks.map(
         (lessonBlock) => lessonBlock.blockId
       );
-      const newBlockIds = input.blocks; // for example: ["1", "2", "3", "1", "2", "3", "4"]
-      // remove all old blocks then add all new blocks (in order, with instances)
+      const newBlockIds = input.blocks;
       await db.lessonBlock.deleteMany({
         where: {
           lessonId: input.lessonId,
         },
       });
-      // for the new blocks do the same thing as addBlockToLesson for each block
-      console.log("newBlockIds: ", newBlockIds);
       for (let i = 0; i < newBlockIds.length; i++) {
         const existingRecords = await db.lessonBlock.findMany({
           where: {

@@ -44,7 +44,6 @@ const EditBlockForm = () => {
       },
     }
   );
-  console.log(blockData);
   const { mutate: editBlockMutation, isLoading: isEditBlockLoading } =
     trpc.blocks.edit.useMutation();
   //TODO: Better loading state after changing block
