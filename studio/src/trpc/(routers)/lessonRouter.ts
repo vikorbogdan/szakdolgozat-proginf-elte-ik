@@ -1,9 +1,9 @@
+import { db } from "@/db";
+import { TRPCError, inferRouterOutputs } from "@trpc/server";
+import { filesize } from "filesize";
+import { Session, getServerSession } from "next-auth";
 import { z } from "zod";
 import { privateProcedure, router } from "../trpc";
-import { db } from "@/db";
-import { getServerSession } from "next-auth";
-import { Session } from "next-auth";
-import { TRPCError, inferRouterOutputs } from "@trpc/server";
 
 export const lessonRouter = router({
   list: privateProcedure.query(async () => {
@@ -173,9 +173,17 @@ export const lessonRouter = router({
         },
       },
     });
-    // return data about lesson and array of blocks based on lessonblock order and instance property
+    const files = await db.file.findMany({
+      where: {
+        lessonId,
+      },
+    });
     return (
       lesson && {
+        files: files.map((file) => ({
+          ...file,
+          size: filesize(file.size ?? 0),
+        })),
         id: lesson.id,
         title: lesson.title,
         blocks: lesson.LessonBlock.map((lessonBlock) => {
@@ -236,6 +244,56 @@ export const lessonRouter = router({
         },
       });
       return lessonBlock;
+    }),
+
+  createAndAddFileAttachmentToLesson: privateProcedure
+    .input(
+      z.object({
+        lessonId: z.string(),
+        ownerId: z.string(),
+        url: z.string(),
+        name: z.string(),
+        contentType: z.string(),
+        size: z.number(),
+      })
+    )
+    .mutation(async (opts) => {
+      const { input } = opts;
+      const file = await db.file.create({
+        data: {
+          lessonId: input.lessonId,
+          url: input.url,
+          name: input.name,
+          ownerId: input.ownerId,
+          contentType: input.contentType,
+          size: input.size,
+        },
+      });
+      if (!file) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "There was an error connecting the file to the database.",
+        });
+      }
+      const lesson = await db.lesson.update({
+        where: {
+          id: input.lessonId,
+        },
+        data: {
+          files: {
+            connect: {
+              id: file.id,
+            },
+          },
+        },
+      });
+      if (!lesson) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Lesson not found.",
+        });
+      }
+      return { success: true };
     }),
 
   /**
@@ -394,7 +452,6 @@ export const lessonRouter = router({
         });
         const instance = existingRecords.length;
 
-        console.log(input.lessonId, newBlockIds[i], i + 1, instance + 1);
         await db.lessonBlock.create({
           data: {
             lessonId: input.lessonId,
@@ -414,6 +471,18 @@ export const lessonRouter = router({
 type LessonRouter = typeof lessonRouter;
 
 type LessonRouterOutput = inferRouterOutputs<LessonRouter>;
+
+export type LessonGetLessonByIdFileOutput = {
+  id: string;
+  ownerId: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  contentType: string | null;
+  url: string;
+  lessonId: string | null;
+  size: string;
+};
 
 export type LessonListAvailableForGroupOutput =
   LessonRouterOutput["listAvailableForGroup"];

@@ -1,13 +1,12 @@
-import { trpc } from "@/app/_trpc/client";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DialogContent,
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import CreateNewGroupForm from "./CreateNewGroupForm";
 import { useState } from "react";
+import CreateNewGroupForm from "./CreateNewGroupForm";
 type CreateNewGroupButtonProps = {};
 
 const CreateNewGroupButton = ({}: CreateNewGroupButtonProps) => {

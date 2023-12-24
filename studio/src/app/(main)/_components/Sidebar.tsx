@@ -1,7 +1,7 @@
 "use client";
 import AuthButton from "@/components/AuthButton";
 import { cn } from "@/lib/utils";
-import { useClientStore } from "@/store/client/useStore";
+import { useNavbarStore } from "@/store/client/useStore";
 import { HomeIcon, Library, TextQuote, Users2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -40,7 +40,7 @@ const Sidebar = () => {
   const pathName = usePathname();
   const [selected, setSelected] = useState(pathName);
   const { data: session } = useSession();
-  const { navbarOpen } = useClientStore();
+  const { navbarOpen } = useNavbarStore();
   if (!session) return null;
   const userData = session.user;
   return (

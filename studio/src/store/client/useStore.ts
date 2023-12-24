@@ -2,8 +2,12 @@ import { create } from "zustand";
 import {
   NavBarOpenSlice,
   createNavbarOpenSlice,
-} from "./createNavbarOpenSlice";
+} from "./slices/navbar/NavbarOpenSlice";
+import { LessonSlice, createLessonSlice } from "./slices/navbar/LessonSlice";
 
-export const useClientStore = create<NavBarOpenSlice>()((...a) => ({
-  ...createNavbarOpenSlice(...a),
-}));
+export const useNavbarStore = create<NavBarOpenSlice & LessonSlice>()(
+  (...a) => ({
+    ...createNavbarOpenSlice(...a),
+    ...createLessonSlice(...a),
+  })
+);

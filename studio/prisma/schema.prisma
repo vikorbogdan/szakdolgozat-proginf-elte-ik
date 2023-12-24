@@ -52,13 +52,16 @@ model Block {
 }
 
 model File {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String
-  path      String
-  lessonId  String?
-  lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  contentType String?
+  url         String
+  lessonId    String?
+  size        Int?
+  ownerId     String
+  lesson      Lesson?  @relation(fields: [lessonId], references: [id])
 }
 
 model LessonBlock {

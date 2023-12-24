@@ -1,13 +1,13 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
+import LoadingPage from "@/components/LoadingPage";
 import { Button } from "@/components/ui/button";
+import { Block } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import DroppableColumn from "./_components/DroppableColumn";
-import { Block } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
-import LoadingPage from "@/components/LoadingPage";
+import DroppableColumn from "./_components/DroppableColumn";
 const EditLesson = () => {
   const router = useRouter();
   const { id: lessonId } = useParams<{ id: string }>();
@@ -26,6 +26,7 @@ const EditLesson = () => {
         console.error(err);
       },
     });
+
   const handleSaveChanges = () => {
     updateLessonBlocks({
       lessonId,
@@ -140,7 +141,6 @@ const EditLesson = () => {
   if (isUpdatingLessonBlocks) return <div>Saving...</div>;
   if (!availableBlocksData || !lessonData)
     return <div>Something went wrong</div>;
-
   return (
     <div className="p-4 md:p-16 bg-primary-foreground min-h-screen h-full w-full">
       <main className="gap-4 flex-col flex items-center">
