@@ -7,6 +7,7 @@ import { lessonRouter } from "./(routers)/lessonRouter";
 import { privateProcedure, publicProcedure, router } from "./trpc";
 import { groupRouter } from "./(routers)/groupRouter";
 import { fileRouter } from "./(routers)/fileRouter";
+import { handoutRouter } from "./(routers)/handoutRouter";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -158,6 +159,7 @@ export const appRouter = router({
   blocks: blockRouter,
   lessons: lessonRouter,
   files: fileRouter,
+  handouts: handoutRouter,
 });
 
 // Export type router type signature,

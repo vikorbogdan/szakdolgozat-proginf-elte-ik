@@ -178,6 +178,15 @@ export const lessonRouter = router({
         lessonId,
       },
     });
+    const sandbox = await db.sandbox.findFirst({
+      where: {
+        Lesson: {
+          some: {
+            id: lessonId,
+          },
+        },
+      },
+    });
     return (
       lesson && {
         files: files.map((file) => ({
@@ -186,6 +195,7 @@ export const lessonRouter = router({
         })),
         id: lesson.id,
         title: lesson.title,
+        sandbox: sandbox ?? null,
         blocks: lesson.LessonBlock.map((lessonBlock) => {
           return {
             id: lessonBlock.block.id,
