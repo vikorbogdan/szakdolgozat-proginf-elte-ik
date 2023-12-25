@@ -11,6 +11,12 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
+import { Info } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 const CreateNewBlockForm = () => {
   const [currentDuration, setCurrentDuration] = useState<number>(5);
   const {
@@ -94,7 +100,23 @@ const CreateNewBlockForm = () => {
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <label htmlFor="content">Edit Content</label>
+        <label className="flex items-center gap-2" htmlFor="content">
+          <span>Edit Content</span>{" "}
+          <HoverCard>
+            <HoverCardTrigger>
+              <Info className="w-4 h-4 cursor-help" />
+            </HoverCardTrigger>
+            <HoverCardContent>
+              For markdown imports, the following elements are supported:
+              <ul className="list-disc list-inside">
+                <li>Headings</li>
+                <li>Paragraphs</li>
+                <li>Lists</li>
+                <li>Code blocks</li>
+              </ul>
+            </HoverCardContent>
+          </HoverCard>
+        </label>
         <Editor editorRef={editorRef} className="bg-none border-2" />
       </div>
       <div className="flex flex-col gap-4">

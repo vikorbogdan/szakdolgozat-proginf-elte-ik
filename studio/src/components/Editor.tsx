@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { EditorOutput } from "@/types/EditorJS";
 import type EditorJS from "@editorjs/editorjs";
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { MDImporter } from "@/editorjs-markdown-parser/src";
 type EditorProps = {
   className?: string;
   editorRef: React.MutableRefObject<EditorJS | undefined>;
@@ -35,6 +35,7 @@ const Editor = ({ className, editorRef, initialData }: EditorProps) => {
         inlineToolbar: true,
         data: initialData ? initialData : { blocks: [] },
         tools: {
+          markdownImporter: MDImporter,
           header: Header,
           list: List,
           embed: Embed,

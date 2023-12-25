@@ -119,3 +119,25 @@ div[class^="ce-toolbar__"] svg{
   @apply bg-white;
 }
 
+.ce-block h1, .ce-block h2, .ce-block h3, .ce-block h4, .ce-block h5, .ce-block h6{
+  @apply font-semibold;
+}
+.ce-block h1{
+  @apply text-3xl;
+}
+.ce-block h2{
+  @apply text-2xl;
+}
+.ce-block h3{
+  @apply text-xl;
+}
+.ce-block h4{
+  @apply text-lg;
+}
+.ce-block h5{
+  @apply text-base;
+}
+.ce-block h6{
+  @apply text-sm;
+}
+
