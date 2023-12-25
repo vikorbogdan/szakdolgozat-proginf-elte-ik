@@ -1,5 +1,5 @@
 import { Block } from "@prisma/client";
-import { Loader, Loader2, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { Draggable } from "react-beautiful-dnd";
 type DraggableItemProps = {
   block: Block;

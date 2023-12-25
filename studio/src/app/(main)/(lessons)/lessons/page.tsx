@@ -1,8 +1,7 @@
 "use client";
 import { Library } from "lucide-react";
-import CreateNewLessonButton from "./_components/CreateNewLessonButton";
-import LessonList from "./_components/LessonList";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CreateNewLessonButton from "../_components/CreateNewLessonButton";
+import LessonList from "../_components/LessonList";
 
 const Lessons = () => {
   return (

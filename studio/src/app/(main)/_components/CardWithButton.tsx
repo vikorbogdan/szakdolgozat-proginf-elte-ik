@@ -3,12 +3,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 
 type CardWithButtonProps = {
   className?: string;

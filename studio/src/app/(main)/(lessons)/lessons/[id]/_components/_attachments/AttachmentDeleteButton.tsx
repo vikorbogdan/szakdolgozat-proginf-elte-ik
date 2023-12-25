@@ -13,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEdgeStore } from "@/lib/edgestore";
 import { Trash2 } from "lucide-react";
-import { useEffect } from "react";
 
 interface AttachmentDeleteButtonProps {
   attachmentId: string;

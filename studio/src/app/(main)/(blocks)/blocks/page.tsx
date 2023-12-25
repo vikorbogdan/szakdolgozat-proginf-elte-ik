@@ -1,7 +1,7 @@
 import { Plus, TextQuote } from "lucide-react";
-import BlockList from "./_components/BlockList";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
+import BlockList from "../_components/BlockList";
 
 const Blocks = () => {
   return (

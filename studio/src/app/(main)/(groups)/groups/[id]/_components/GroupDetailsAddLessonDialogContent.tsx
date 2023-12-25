@@ -1,12 +1,9 @@
 import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { formatDuration } from "@/lib/utils";
-import { Clock, Loader2 } from "lucide-react";
-import { ChangeEvent, use, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
 import GroupDetailsAddLessonDialogScrollArea from "./GroupDetailsAddLessonDialogScrollArea";
 
 type GroupDetailsAddLessonListProps = {

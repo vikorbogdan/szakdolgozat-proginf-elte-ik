@@ -1,10 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/lib/utils";
 import { Block } from "@prisma/client";
-import { ArrowBigRight, Clock, Loader2, Trash2 } from "lucide-react";
+import { Clock, Loader2 } from "lucide-react";
 import Link from "next/link";
-import DeleteBlockListItemButton from "./DeleteBlockListItemButton";
 import { useState } from "react";
+import DeleteBlockListItemButton from "./DeleteBlockListItemButton";
 
 type BlockListItemProps = {
   block: Block;

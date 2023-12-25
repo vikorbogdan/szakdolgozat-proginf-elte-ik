@@ -1,6 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@prisma/client";
-import { Crown } from "lucide-react";
 import GroupDetailsMemberListItem from "./GroupDetailsMemberListItem";
 
 type GroupDetailsMemberListProps = {

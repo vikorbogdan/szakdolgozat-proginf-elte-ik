@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.10.0",
     "@edgestore/react": "^0.1.4",
     "@edgestore/server": "^0.1.4",
     "@editorjs/code": "^2.8.0",

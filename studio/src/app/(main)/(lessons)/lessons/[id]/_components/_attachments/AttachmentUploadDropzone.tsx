@@ -111,8 +111,6 @@ const AttachmentUploadDropzone = ({
             <input {...getInputProps()} />
             <AttachmentUploadDropzoneContent
               rejectedFile={rejectedFile}
-              getRootProps={getRootProps}
-              getInputProps={getInputProps}
               acceptedFiles={acceptedFiles}
               isDragActive={isDragActive}
             />

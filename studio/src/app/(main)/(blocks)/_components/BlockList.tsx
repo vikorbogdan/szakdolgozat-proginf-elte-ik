@@ -2,6 +2,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { Loader2 } from "lucide-react";
 import BlockListItem from "./BlockListItem";
+
 const BlockList = () => {
   const { data: blocks, isLoading: blocksAreLoading } =
     trpc.blocks.list.useQuery();

@@ -2,8 +2,8 @@
 import { trpc } from "@/app/_trpc/client";
 import LoadingPage from "@/components/LoadingPage";
 import { Users2 } from "lucide-react";
-import CreateNewGroupButton from "./_components/CreateNewGroupButton";
-import GroupList from "./_components/GroupList";
+import CreateNewGroupButton from "../_components/CreateNewGroupButton";
+import GroupList from "../_components/GroupList";
 
 const Groups = () => {
   const { data: groupData, isLoading: isGroupsLoading } =

@@ -3,10 +3,11 @@ import { trpc } from "@/app/_trpc/client";
 import LoadingPage from "@/components/LoadingPage";
 import { Button } from "@/components/ui/button";
 import { useParams } from "next/navigation";
-import EditGroupButton from "../_components/EditGroupButton";
+
 import GroupDetailsAddLessonButton from "./_components/GroupDetailsAddLessonButton";
 import GroupDetailsMemberList from "./_components/GroupDetailsMemberList";
 import { Loader2 } from "lucide-react";
+import EditGroupButton from "../../_components/EditGroupButton";
 
 const SubjectGroupPage = () => {
   const { id } = useParams<{ id: string }>();

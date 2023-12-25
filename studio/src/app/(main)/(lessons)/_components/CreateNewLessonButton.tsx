@@ -1,15 +1,12 @@
-import { trpc } from "@/app/_trpc/client";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   DialogContent,
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Dialog, DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { Trash2 } from "lucide-react";
-import CreateNewLessonForm from "./CreateNewLessonForm";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
+import CreateNewLessonForm from "./CreateNewLessonForm";
 type CreateNewLessonButtonProps = {};
 
 const CreateNewLessonButton = ({}: CreateNewLessonButtonProps) => {

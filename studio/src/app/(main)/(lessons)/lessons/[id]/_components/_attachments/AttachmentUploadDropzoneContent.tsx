@@ -2,16 +2,12 @@ import { FileIcon, UploadCloud } from "lucide-react";
 import { FileRejection } from "react-dropzone";
 
 interface AttachmentUploadDropzoneContentProps {
-  getRootProps: any;
-  getInputProps: any;
   acceptedFiles: any;
   isDragActive: any;
   rejectedFile: FileRejection | null;
 }
 
 const AttachmentUploadDropzoneContent = ({
-  getRootProps,
-  getInputProps,
   acceptedFiles,
   isDragActive,
   rejectedFile,
