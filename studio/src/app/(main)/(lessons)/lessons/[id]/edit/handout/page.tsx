@@ -84,10 +84,10 @@ const EditHandoutPage = () => {
   }
   return (
     <div className="flex p-4 md:p-16 gap-16 bg-primary-foreground min-h-screen h-full w-full flex-col">
-      <div className="flex items-center w-full gap-4">
-        <FileTerminal className="h-14 w-14" />
+      <div className="flex items-center w-full gap-2 md:gap-4">
+        <FileTerminal className="h-6 w-6 md:h-14 md:w-14" />
         <h1 className="md:text-5xl text-xl font-semibold">
-          Handout for {lessonData?.title}
+          Create a handout for {lessonData?.title}
         </h1>
         {isHandoutLoading && (
           <div className="flex gap-2 items-center ml-auto">
@@ -99,12 +99,19 @@ const EditHandoutPage = () => {
       <main className="gap-4 flex flex-col">
         <h2 className="text-2xl font-semibold">Instructions</h2>
         <p>
-          This is the handout for {lessonData?.title}. It contains the
-          instructions for the lesson. You can edit the instructions by clicking
-          the button below.
+          This is the handout for {lessonData?.title}. It contains an
+          interactive live code editor for the lesson. You can edit the starting
+          code for your students by clicking the button below.
         </p>
         <h2 className="text-2xl font-semibold">Template</h2>
-        <p>Choose a template for the handout.</p>
+        {!sandboxData ? (
+          <p>First choose a template for the live code editor.</p>
+        ) : (
+          <p>
+            To change the template of your code editor, you need to reset the
+            handout first.
+          </p>
+        )}
         <div className="flex gap-4">
           <HandoutTemplateSelect
             templateOptionsList={[
@@ -136,7 +143,8 @@ const EditHandoutPage = () => {
             <h2 className="text-2xl font-semibold">Code Editor</h2>
             <p>
               This is the code editor for the lesson. You can edit the code by
-              clicking the button below. Change the code so you can save it.
+              clicking the button below. After you are done editing, click the
+              save button.
             </p>
             <HandoutCodeEditor />
 

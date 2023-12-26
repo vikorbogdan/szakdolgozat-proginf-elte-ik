@@ -36,13 +36,20 @@ const LessonOutlinePage = () => {
             <h1 className="font-semibold text-2xl md:text-4xl">
               {lessonData?.title}
             </h1>
-
-            <Link
-              href={`/lessons/${id}/edit`}
-              className={cn(buttonVariants({ variant: "outline" }), "my-4")}
-            >
-              {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                href={`/lessons/${id}/edit`}
+                className={cn(buttonVariants({ variant: "outline" }), "my-4")}
+              >
+                {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
+              </Link>
+              <Link
+                href={`/lessons/${id}/edit/handout`}
+                className={cn(buttonVariants({ variant: "outline" }), "my-4")}
+              >
+                {lessonData.sandbox ? "Edit" : "Add"} Handout
+              </Link>
+            </div>
           </header>
           <main className="flex flex-col gap-4 items-center w-full">
             {lessonData?.blocks.map((block, idx) => {

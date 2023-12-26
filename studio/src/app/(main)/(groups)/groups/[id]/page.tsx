@@ -6,8 +6,9 @@ import { useParams } from "next/navigation";
 
 import GroupDetailsAddLessonButton from "./_components/GroupDetailsAddLessonButton";
 import GroupDetailsMemberList from "./_components/GroupDetailsMemberList";
-import { Loader2 } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import EditGroupButton from "../../_components/EditGroupButton";
+import Link from "next/link";
 
 const SubjectGroupPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -62,6 +63,9 @@ const SubjectGroupPage = () => {
                   className={`bg-muted shadow-md transition-all rounded-lg justify-between flex items-center p-4`}
                 >
                   <span className="text-2xl block">{lesson.title}</span>
+                  <Link href={`/lessons/${lesson.id}`}>
+                    <ArrowRight />
+                  </Link>
                 </li>
               ))}
             </ul>

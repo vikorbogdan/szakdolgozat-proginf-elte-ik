@@ -21,10 +21,10 @@ const HandoutChangeTemplateDialogButton = ({
   return (
     <AlertDialog>
       <AlertDialogTrigger className="">
-        <Button disabled={isDisabled}>Change Template</Button>
+        <Button disabled={isDisabled}>Reset Handout</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
-        <AlertDialogTitle>Change Template</AlertDialogTitle>
+        <AlertDialogTitle>Reset Handout</AlertDialogTitle>
         <AlertDialogDescription>
           Are you sure you want to change the template? This will delete all
           your existing files in the handout.
@@ -35,7 +35,7 @@ const HandoutChangeTemplateDialogButton = ({
             className={buttonVariants({ variant: "destructive" })}
             onClick={handleUnlockTemplateChange}
           >
-            Change Template
+            Reset Handout
           </AlertDialogAction>
         </div>
       </AlertDialogContent>
