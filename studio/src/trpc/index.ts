@@ -155,6 +155,67 @@ export const appRouter = router({
       splashTextArray[Math.floor(Math.random() * splashTextArray.length)]
     } ${randomEmojis.join("")}`;
   }),
+  dashboardInfo: privateProcedure.query(async () => {
+    const session: Session | null = await getServerSession();
+    if (!session) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Session not found.",
+      });
+    }
+    const { user } = session;
+    if (!user?.email) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User has no e-mail associated with their profile.",
+      });
+    }
+    const userEmail = user.email;
+    const dbUser = await db.user.findFirst({
+      where: {
+        email: userEmail,
+      },
+    });
+    if (!dbUser) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found.",
+      });
+    }
+    const userId = dbUser.id;
+    const lessonCount = await db.lesson.count({
+      where: {
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+    const groupCount = await db.group.count({
+      where: {
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+    const blockCount = await db.block.count({
+      where: {
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+    return {
+      lessonCount,
+      groupCount,
+      blockCount,
+    };
+  }),
   groups: groupRouter,
   blocks: blockRouter,
   lessons: lessonRouter,

@@ -1,18 +1,17 @@
 "use client";
-import { trpc } from "@/app/_trpc/client";
-import { Loader2 } from "lucide-react";
+
 import LessonListItem from "./LessonListItem";
-const LessonList = () => {
-  const { data: lessons, isLoading: lessonsAreLoading } =
-    trpc.lessons.list.useQuery();
-  if (lessonsAreLoading) {
-    return (
-      <div className="w-full flex items-center justify-center gap-2">
-        <Loader2 className="h-10 text-foreground animate-spin"></Loader2>
-        <p>Fetching learning lessons...</p>
-      </div>
-    );
-  }
+
+interface LessonListProps {
+  lessons?: {
+    title: string;
+    id: string;
+    duration: number;
+    numOfBlocks: number;
+  }[];
+}
+
+const LessonList = ({ lessons }: LessonListProps) => {
   if (lessons?.length === 0) {
     return (
       <div className="w-full flex items-center justify-center gap-2">

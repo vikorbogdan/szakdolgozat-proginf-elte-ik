@@ -3,6 +3,8 @@ import BlockContentRenderer from "@/app/(main)/_components/BlockContentRenderer"
 import { trpc } from "@/app/_trpc/client";
 import LoadingPage from "@/components/LoadingPage";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+
 import { Edit } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -16,7 +18,7 @@ const LearningBlockPage = () => {
   if (!blockData?.content) return <div>Block has no content</div>;
   return (
     <div className="p-4 md:p-16 bg-primary-foreground min-h-screen h-full w-full">
-      <div className="flex w-full justify-between">
+      <header className="flex w-full justify-between">
         <h1 className="font-semibold text-4xl">{blockData?.title}</h1>
         <Button
           variant={"outline"}
@@ -27,8 +29,13 @@ const LearningBlockPage = () => {
         >
           <Edit className="w-4 h-4 text-muted-foreground" />
         </Button>
-      </div>
-      <BlockContentRenderer blockContentData={JSON.parse(blockData?.content)} />
+      </header>
+      <Separator className="my-4" />
+      <main>
+        <BlockContentRenderer
+          blockContentData={JSON.parse(blockData?.content)}
+        />
+      </main>
     </div>
   );
 };

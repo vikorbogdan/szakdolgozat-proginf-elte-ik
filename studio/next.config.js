@@ -6,7 +6,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**.blob.vercel-storage.com",
+        hostname: "files.edgestore.dev",
       },
     ],
   },

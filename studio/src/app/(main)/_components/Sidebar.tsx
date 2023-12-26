@@ -5,7 +5,7 @@ import { useNavbarStore } from "@/store/client/useStore";
 import { HomeIcon, Library, TextQuote, Users2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -41,6 +41,11 @@ const Sidebar = () => {
   const [selected, setSelected] = useState(pathName);
   const { data: session } = useSession();
   const { navbarOpen } = useNavbarStore();
+
+  useEffect(() => {
+    setSelected(pathName);
+  }, [pathName]);
+
   if (!session) return null;
   const userData = session.user;
   return (

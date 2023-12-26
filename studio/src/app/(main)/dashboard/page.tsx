@@ -2,9 +2,16 @@
 import { Library, TextQuote, Users2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import CardWithButton from "../_components/CardWithButton";
+import { trpc } from "@/app/_trpc/client";
+import LoadingPage from "@/components/LoadingPage";
 
 const Dashboard = () => {
   const { data: session } = useSession();
+  const { data: dashboardInfo, isLoading: isDashboardInfoLoading } =
+    trpc.dashboardInfo.useQuery();
+  if (isDashboardInfoLoading) {
+    return <LoadingPage />;
+  }
   return (
     <div className="flex p-4 md:p-16 gap-16 bg-primary-foreground min-h-screen h-full w-full flex-col">
       <h1 className="md:text-5xl text-xl font-semibold">
@@ -20,8 +27,16 @@ const Dashboard = () => {
             title="Subject Groups"
             description="Manage your Subject Groups"
             buttonText="See my Subject Groups"
+            href="/groups"
           >
-            You have no Subject Groups yet.
+            {dashboardInfo?.groupCount && dashboardInfo.groupCount > 0 ? (
+              <p>
+                You are currently a member of {dashboardInfo?.groupCount}{" "}
+                {dashboardInfo?.groupCount > 1 ? "groups" : "group"}.
+              </p>
+            ) : (
+              <p>You have no groups yet.</p>
+            )}
           </CardWithButton>
           <CardWithButton
             hoverAnimation
@@ -31,8 +46,19 @@ const Dashboard = () => {
             title="Lesson Outlines"
             description="Manage your Lesson Outlines"
             buttonText="See my Lesson Outlines"
+            href="/lessons"
           >
-            You have no lessons yet.
+            {dashboardInfo?.lessonCount && dashboardInfo.lessonCount > 0 ? (
+              <p>
+                You have created {dashboardInfo?.lessonCount}{" "}
+                {dashboardInfo?.lessonCount > 1
+                  ? "Lesson Outlines"
+                  : "Lesson Outline"}
+                .
+              </p>
+            ) : (
+              <p>You have no Lesson Outlines yet.</p>
+            )}
           </CardWithButton>
           <CardWithButton
             hoverAnimation
@@ -42,8 +68,19 @@ const Dashboard = () => {
             title="Learning Blocks"
             description="Manage your Learning Blocks"
             buttonText="See my Learning Blocks"
+            href="/blocks"
           >
-            You have no Blocks yet.
+            {dashboardInfo?.blockCount && dashboardInfo.blockCount > 0 ? (
+              <p>
+                You have created {dashboardInfo?.blockCount}{" "}
+                {dashboardInfo?.blockCount > 1
+                  ? "Learning Blocks"
+                  : "Learning Block"}
+                .
+              </p>
+            ) : (
+              <p>You have no Learning Blocks yet.</p>
+            )}
           </CardWithButton>
         </div>
       </main>

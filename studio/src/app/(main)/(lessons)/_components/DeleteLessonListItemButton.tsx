@@ -51,7 +51,7 @@ const DeleteLessonListItemButton = ({
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
-            lesson.
+            lesson, and all corresponding attachments and handouts.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

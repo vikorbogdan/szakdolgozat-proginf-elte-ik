@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,8 +6,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import Link from "next/link";
 
 type CardWithButtonProps = {
   className?: string;
@@ -18,6 +20,7 @@ type CardWithButtonProps = {
   children: React.ReactNode;
   buttonText: string;
   hoverAnimation?: boolean;
+  href?: string;
 };
 
 const CardWithButton = ({
@@ -29,6 +32,7 @@ const CardWithButton = ({
   children,
   buttonText,
   hoverAnimation,
+  href,
 }: CardWithButtonProps) => {
   const CardWithButtonComponent = (
     <Card className={className}>
@@ -36,7 +40,15 @@ const CardWithButton = ({
         {Icon && <Icon className="w-12 h-12" />}
         <CardTitle>{title}</CardTitle>
         <CardDescription className="text-white">{description}</CardDescription>
-        <Button className={buttonClassName}>{buttonText}</Button>
+        <Link
+          href={href ?? ""}
+          className={cn(
+            buttonVariants({ variant: "default" }),
+            buttonClassName
+          )}
+        >
+          {buttonText}
+        </Link>
       </CardHeader>
       <CardContent>{children}</CardContent>
     </Card>

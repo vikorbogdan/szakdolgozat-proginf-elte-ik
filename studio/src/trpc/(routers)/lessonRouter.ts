@@ -4,6 +4,7 @@ import { filesize } from "filesize";
 import { Session, getServerSession } from "next-auth";
 import { z } from "zod";
 import { privateProcedure, router } from "../trpc";
+import { backendEdgeClient } from "@/app/api/edgestore/[...edgestore]/route";
 
 export const lessonRouter = router({
   list: privateProcedure.query(async () => {
@@ -398,6 +399,33 @@ export const lessonRouter = router({
         lessonId,
       },
     });
+    const files = await db.file.findMany({
+      where: {
+        lessonId,
+      },
+    });
+    const fileUrls = files.map((file) => file.url);
+    for (const url of fileUrls) {
+      await backendEdgeClient.publicFiles.deleteFile({
+        url,
+      });
+    }
+    await db.file.deleteMany({
+      where: {
+        lessonId,
+      },
+    });
+
+    await db.sandbox.deleteMany({
+      where: {
+        Lesson: {
+          some: {
+            id: lessonId,
+          },
+        },
+      },
+    });
+
     await db.lessonBlock.deleteMany({
       where: {
         lessonId,
