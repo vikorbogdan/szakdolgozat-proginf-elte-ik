@@ -1,6 +1,7 @@
 "use client";
 import BlockContentRenderer from "@/app/(main)/_components/BlockContentRenderer";
 import { trpc } from "@/app/_trpc/client";
+import ErrorPage from "@/components/ErrorPage";
 import LoadingPage from "@/components/LoadingPage";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -11,8 +12,14 @@ import { useParams, useRouter } from "next/navigation";
 const LearningBlockPage = () => {
   const params = useParams();
   const router = useRouter();
-  const { data: blockData, isLoading: blockDataIsLoading } =
-    trpc.blocks.getBlockById.useQuery(params.id as string);
+  const {
+    data: blockData,
+    isLoading: blockDataIsLoading,
+    isError: blockDataIsError,
+    error,
+  } = trpc.blocks.getBlockById.useQuery(params.id as string);
+  if (blockDataIsError)
+    return <ErrorPage code={403} message={error?.message} />;
   if (blockDataIsLoading) return <LoadingPage />;
   if (!blockData) return <div>Block not found</div>;
   if (!blockData?.content) return <div>Block has no content</div>;

@@ -71,15 +71,17 @@ const LessonOutlinePage = () => {
               return (
                 <Card className="w-full md:w-[48rem]" key={block.id + idx}>
                   <CardHeader className="flex items-center flex-row w-full justify-between">
-                    <Button
-                      variant={"outline"}
-                      onClick={() => {
-                        router.push(`/blocks/${block.id}/edit`);
-                      }}
-                      className="flex text-sm items-center gap-1"
-                    >
-                      <Edit className="w-4 h-4 text-muted-foreground" />
-                    </Button>
+                    {userId === lessonData.ownerId && (
+                      <Button
+                        variant={"outline"}
+                        onClick={() => {
+                          router.push(`/blocks/${block.id}/edit`);
+                        }}
+                        className="flex text-sm items-center gap-1"
+                      >
+                        <Edit className="w-4 h-4 text-muted-foreground" />
+                      </Button>
+                    )}
                     <CardTitle className="text-center">{block.title}</CardTitle>
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <span>{formatDuration(block.duration)}</span>

@@ -6,17 +6,33 @@ import { getServerSession } from "next-auth";
 import { BlockValidator } from "@/lib/validators/block";
 import { z } from "zod";
 
-export const blockRouter = router({
-  // listAll: publicProcedure.query(async () => {
-  //   const blocks = await db.block.findMany();
-  //   return blocks.map((block) => ({
-  //     id: block.id,
-  //     title: block.title,
-  //     duration: block.duration,
-  //     content: null,
-  //   }));
-  // }),
+const canAccessBlock = async (blockId: string, userId: string) => {
+  // TODO: Move this to a middleware file.
+  // user can access block if they are the owner of the block
 
+  const block = await db.block.findUnique({
+    where: {
+      id: blockId,
+    },
+    include: {
+      users: true,
+    },
+  });
+
+  if (!block) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Block not found.",
+    });
+  }
+
+  if (block.users[0].id === userId) {
+    return true;
+  }
+
+  return false;
+};
+export const blockRouter = router({
   list: privateProcedure.query(async () => {
     const session: Session | null = await getServerSession();
     if (!session) {
@@ -29,7 +45,7 @@ export const blockRouter = router({
     if (!user?.email) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "User has no e-mail associated with their profile.",
+        message: "You have no e-mail associated with your profile.",
       });
     }
     const userEmail = user.email;
@@ -55,7 +71,7 @@ export const blockRouter = router({
     }));
   }),
 
-  getBlockById: publicProcedure.input(z.string()).query(async (opts) => {
+  getBlockById: privateProcedure.input(z.string()).query(async (opts) => {
     const { input: id } = opts;
     const block = await db.block.findUnique({
       where: {
@@ -66,6 +82,13 @@ export const blockRouter = router({
       throw new TRPCError({
         code: "NOT_FOUND",
         message: "Block not found.",
+      });
+    }
+    const hasAccess = await canAccessBlock(id, opts.ctx.userId);
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You have no access to this block.",
       });
     }
     return {
@@ -89,7 +112,7 @@ export const blockRouter = router({
     if (!user?.email) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "User has no e-mail associated with their profile.",
+        message: "You have no e-mail associated with your profile.",
       });
     }
     const userEmail = user.email;
@@ -133,7 +156,7 @@ export const blockRouter = router({
     if (!user?.email) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "User has no e-mail associated with their profile.",
+        message: "You have no e-mail associated with your profile.",
       });
     }
     const userEmail = user.email;
@@ -148,6 +171,15 @@ export const blockRouter = router({
         message: "User not found.",
       });
     }
+
+    const hasAccess = await canAccessBlock(blockId, opts.ctx.userId);
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You don't have access to delete this block.",
+      });
+    }
+
     await db.lessonBlock.deleteMany({
       where: {
         blockId,
@@ -189,7 +221,7 @@ export const blockRouter = router({
       if (!user?.email) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "User has no e-mail associated with their profile.",
+          message: "You have no e-mail associated with your profile.",
         });
       }
       const userEmail = user.email;
@@ -202,6 +234,14 @@ export const blockRouter = router({
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "User not found.",
+        });
+      }
+
+      const hasAccess = await canAccessBlock(blockId, opts.ctx.userId);
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You don't have access to edit this block.",
         });
       }
       await db.user.update({

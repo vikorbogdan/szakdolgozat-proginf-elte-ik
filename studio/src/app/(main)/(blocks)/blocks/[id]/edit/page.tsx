@@ -3,8 +3,18 @@ import { buttonVariants } from "@/components/ui/button";
 import { ArrowLeft, PlusSquare } from "lucide-react";
 import Link from "next/link";
 import EditBlockForm from "./_components/EditBlockForm";
+import { useParams } from "next/navigation";
+import { trpc } from "@/app/_trpc/client";
+import ErrorPage from "@/components/ErrorPage";
+import LoadingPage from "@/components/LoadingPage";
 
 const EditBlock = () => {
+  const { id: blockId } = useParams();
+  const { isLoading, isError, error } = trpc.blocks.getBlockById.useQuery(
+    blockId as string
+  );
+  if (isError) return <ErrorPage code={403} message={error?.message} />;
+  if (isLoading) return <LoadingPage />;
   return (
     <div className="flex p-4 md:p-16 gap-16 bg-primary-foreground min-h-screen h-full w-full flex-col">
       <div className="flex justify-between items-center">
