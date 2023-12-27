@@ -8,6 +8,7 @@ import { privateProcedure, publicProcedure, router } from "./trpc";
 import { groupRouter } from "./(routers)/groupRouter";
 import { fileRouter } from "./(routers)/fileRouter";
 import { handoutRouter } from "./(routers)/handoutRouter";
+import { z } from "zod";
 
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
@@ -216,6 +217,46 @@ export const appRouter = router({
       blockCount,
     };
   }),
+  getPublicDataByUserId: privateProcedure
+    .input(z.string())
+    .query(async (opts) => {
+      const userId = opts.input;
+      const user = await db.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+      return {
+        name: user.name,
+        image: user.image,
+      };
+    }),
+  getPublicDataByUserEmail: privateProcedure
+    .input(z.string())
+    .query(async (opts) => {
+      const userEmail = opts.input;
+      const user = await db.user.findUnique({
+        where: {
+          email: userEmail,
+        },
+      });
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found.",
+        });
+      }
+      return {
+        name: user.name,
+        image: user.image,
+      };
+    }),
   groups: groupRouter,
   blocks: blockRouter,
   lessons: lessonRouter,

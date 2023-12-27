@@ -6,6 +6,70 @@ import { z } from "zod";
 import { privateProcedure, router } from "../trpc";
 import { backendEdgeClient } from "@/app/api/edgestore/[...edgestore]/route";
 
+const canAccessLesson = async (lessonId: string, userId: string) => {
+  // TODO: Move this to a middleware file.
+  const lesson = await db.lesson.findUnique({
+    where: {
+      id: lessonId,
+    },
+    include: {
+      users: true,
+    },
+  });
+
+  if (!lesson) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Lesson not found.",
+    });
+  }
+
+  if (lesson.users.some((user) => user.id === userId)) {
+    return true;
+  }
+  const groups = await db.group.findMany({
+    where: {
+      lessons: {
+        some: {
+          id: lessonId,
+        },
+      },
+    },
+    include: {
+      users: true,
+    },
+  });
+  if (groups.some((group) => group.users.some((user) => user.id === userId))) {
+    return true;
+  }
+  return false;
+};
+const canModifyLesson = async (lessonId: string, userId: string) => {
+  // only the owner of the lesson can modify it
+  // TODO: Move this to a middleware file.
+  const lesson = await db.lesson.findUnique({
+    where: {
+      id: lessonId,
+    },
+    include: {
+      users: true,
+    },
+  });
+
+  if (!lesson) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Lesson not found.",
+    });
+  }
+
+  if (lesson.users.some((user) => user.id === userId)) {
+    return true;
+  }
+
+  return false;
+};
+
 export const lessonRouter = router({
   list: privateProcedure.query(async () => {
     const session: Session | null = await getServerSession();
@@ -73,6 +137,11 @@ export const lessonRouter = router({
       };
     });
   }),
+  /**
+   * List all lessons that can be added to a group (Current user created it and not yet in the group).
+   * @returns An array of all lessons.
+   * @throws Error if the user is not logged in.
+   */
   listAvailableForGroup: privateProcedure
     .input(z.string())
     .query(async (opts) => {
@@ -188,6 +257,23 @@ export const lessonRouter = router({
         },
       },
     });
+    const hasAccess = await canAccessLesson(lessonId, opts.ctx.userId);
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User does not have access to this lesson.",
+      });
+    }
+    const ownerId = await db.user.findFirst({
+      where: {
+        lessons: {
+          some: {
+            id: lessonId,
+          },
+        },
+      },
+    });
+
     return (
       lesson && {
         files: files.map((file) => ({
@@ -197,6 +283,7 @@ export const lessonRouter = router({
         id: lesson.id,
         title: lesson.title,
         sandbox: sandbox ?? null,
+        ownerId: ownerId?.id ?? null,
         blocks: lesson.LessonBlock.map((lessonBlock) => {
           return {
             id: lessonBlock.block.id,
@@ -242,6 +329,13 @@ export const lessonRouter = router({
       });
       if (!block) {
         throw new Error("Block not found.");
+      }
+      const hasAccess = await canModifyLesson(input.lessonId, opts.ctx.userId);
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User does not have access to modify this lesson.",
+        });
       }
       const lessonBlock = await db.lessonBlock.create({
         data: {
@@ -298,6 +392,13 @@ export const lessonRouter = router({
           },
         },
       });
+      const hasAccess = await canAccessLesson(input.lessonId, opts.ctx.userId);
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User does not have access to upload files to this lesson.",
+        });
+      }
       if (!lesson) {
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -394,6 +495,13 @@ export const lessonRouter = router({
         message: "Lesson not found.",
       });
     }
+    const hasAccess = await canModifyLesson(lessonId, opts.ctx.userId);
+    if (!hasAccess) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User does not have access to delete this lesson.",
+      });
+    }
     const lessonBlocks = await db.lessonBlock.findMany({
       where: {
         lessonId,
@@ -462,6 +570,13 @@ export const lessonRouter = router({
       });
       if (!lesson) {
         throw new Error("Lesson not found.");
+      }
+      const hasAccess = await canModifyLesson(input.lessonId, opts.ctx.userId);
+      if (!hasAccess) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "User does not have access to modify this lesson.",
+        });
       }
       const lessonBlocks = await db.lessonBlock.findMany({
         where: {

@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@prisma/client";
 import { Crown } from "lucide-react";
+import GroupDetailsMemberListRemoveAvatarButton from "./GroupDetailsMemberListRemoveAvatarButton";
 
 type GroupDetailsMemberListItemProps = {
   user: User;
@@ -16,17 +16,7 @@ const GroupDetailsMemberListItem = ({
       key={user.id}
       className="bg-muted p-4 justify-start rounded-lg flex items-center gap-2"
     >
-      <Avatar>
-        <AvatarImage src={user.image ?? ""} />
-        <AvatarFallback>
-          {user.name &&
-            user.name
-              .split(" ")
-              .slice(0, 2)
-              .map((name) => name[0])
-              .join("")}
-        </AvatarFallback>
-      </Avatar>
+      <GroupDetailsMemberListRemoveAvatarButton isOwner={isOwner} user={user} />
       <span className="text-lg md:text-xl">{user.name}</span>
       {isOwner && (
         <div className="items-center ml-auto text-primary flex flex-col">

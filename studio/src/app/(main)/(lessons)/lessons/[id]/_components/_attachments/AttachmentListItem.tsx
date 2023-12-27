@@ -17,13 +17,26 @@ interface AttachmentListItemProps {
 import { getDownloadUrl } from "@edgestore/react/utils";
 import { useState } from "react";
 import AttachmentDeleteButton from "./AttachmentDeleteButton";
-import { Loader2 } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import { trpc } from "@/app/_trpc/client";
+import { useParams } from "next/navigation";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const AttachmentListItem = ({ attachment }: AttachmentListItemProps) => {
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
-  const { data: userIdData } = trpc.getOwnUserId.useQuery();
-  const { id: userId } = userIdData ?? {};
+  const { id: lessonId } = useParams<{ id: string }>();
+  const { data: ownUserData } = trpc.getOwnUserId.useQuery();
+  const { data: lessonData, isLoading: isLessonDataLoading } =
+    trpc.lessons.getLessonById.useQuery(lessonId);
+  const userId = ownUserData?.id;
+  const { data: ownerPublicData } = trpc.getPublicDataByUserId.useQuery(
+    attachment.ownerId ?? ""
+  );
   return (
     <Card className="w-full relative items-center max-w-3xl">
       {isDeleteLoading && (
@@ -46,15 +59,33 @@ const AttachmentListItem = ({ attachment }: AttachmentListItemProps) => {
             {attachment.size} - {moment(attachment.createdAt).fromNow()}
           </CardDescription>
         </CardHeader>
+        <HoverCard>
+          <HoverCardTrigger className="cursor-pointer group ml-auto">
+            <Avatar>
+              <div className="w-full h-full group-hover:opacity-100 opacity-0 flex items-center justify-center absolute bg-background/50 transition-opacity">
+                <Info className="w-5 h-5" />
+              </div>
+              <AvatarImage aria-hidden src={ownerPublicData?.image ?? ""} />
+            </Avatar>
+          </HoverCardTrigger>
+          <HoverCardContent className="flex items-center justify-center">
+            <div>
+              <p className="font-semibold">{ownerPublicData?.name}</p>
+              <p className="text-sm">
+                {moment(attachment.updatedAt).format("lll")}
+              </p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
         <Link
           href={getDownloadUrl(attachment.url, attachment.name)}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(buttonVariants({ variant: "outline" }), "ml-auto")}
+          className={cn(buttonVariants({ variant: "outline" }))}
         >
           Download
         </Link>
-        {attachment.ownerId === userId && (
+        {(attachment.ownerId === userId || lessonData?.ownerId === userId) && (
           <AttachmentDeleteButton
             attachmentId={attachment.id}
             lessonId={attachment.lessonId ?? ""}

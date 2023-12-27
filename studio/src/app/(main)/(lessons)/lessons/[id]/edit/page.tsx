@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
 import DroppableColumn from "./_components/DroppableColumn";
+import ErrorPage from "@/components/ErrorPage";
+
 const EditLesson = () => {
   const router = useRouter();
   const { id: lessonId } = useParams<{ id: string }>();
@@ -26,7 +28,8 @@ const EditLesson = () => {
         console.error(err);
       },
     });
-
+  const { data: getOwnUserIdData } = trpc.getOwnUserId.useQuery();
+  const userId = getOwnUserIdData?.id;
   const handleSaveChanges = () => {
     updateLessonBlocks({
       lessonId,
@@ -136,7 +139,13 @@ const EditLesson = () => {
       });
     }
   };
-
+  if (lessonData?.ownerId !== userId)
+    return (
+      <ErrorPage
+        code={403}
+        message={"You don't have permission to edit this lesson"}
+      />
+    );
   if (isAvailableBlocksLoading || isLessonDataLoading) return <LoadingPage />;
   if (isUpdatingLessonBlocks) return <div>Saving...</div>;
   if (!availableBlocksData || !lessonData)

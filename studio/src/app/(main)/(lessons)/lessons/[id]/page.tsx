@@ -1,6 +1,7 @@
 "use client";
 import BlockContentRenderer from "@/app/(main)/_components/BlockContentRenderer";
 import { trpc } from "@/app/_trpc/client";
+import ErrorPage from "@/components/ErrorPage";
 import LoadingPage from "@/components/LoadingPage";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,9 +17,21 @@ import AttachmentUploadButton from "./_components/_attachments/AttachmentUploadB
 const LessonOutlinePage = () => {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const { data: lessonData, isLoading: lessonDataIsLoading } =
-    trpc.lessons.getLessonById.useQuery(id);
-  if (lessonDataIsLoading) return <LoadingPage />;
+  const {
+    data: lessonData,
+    isLoading: isLessonDataLoading,
+    isError: isLessonDataError,
+  } = trpc.lessons.getLessonById.useQuery(id);
+  const { data: ownUserData } = trpc.getOwnUserId.useQuery();
+  const userId = ownUserData?.id;
+
+  if (isLessonDataError)
+    return (
+      <div className="p-4 md:p-16 bg-primary-foreground min-h-screen h-full w-full">
+        <ErrorPage />
+      </div>
+    );
+  if (isLessonDataLoading) return <LoadingPage />;
   if (!lessonData) return <div>Lesson not found</div>;
   if (!lessonData?.blocks) return <div>Could not retrieve blocks.</div>;
   return (
@@ -36,22 +49,24 @@ const LessonOutlinePage = () => {
             <h1 className="font-semibold text-2xl md:text-4xl">
               {lessonData?.title}
             </h1>
-            <div className="flex gap-2">
-              <Link
-                href={`/lessons/${id}/edit`}
-                className={cn(buttonVariants({ variant: "outline" }), "my-4")}
-              >
-                {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
-              </Link>
-              <Link
-                href={`/lessons/${id}/edit/handout`}
-                className={cn(buttonVariants({ variant: "outline" }), "my-4")}
-              >
-                {lessonData.sandbox ? "Edit" : "Add"} Handout
-              </Link>
-            </div>
+            {lessonData.ownerId === userId && (
+              <div className="flex gap-2">
+                <Link
+                  href={`/lessons/${id}/edit`}
+                  className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
+                >
+                  {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
+                </Link>
+                <Link
+                  href={`/lessons/${id}/edit/handout`}
+                  className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
+                >
+                  {lessonData.sandbox ? "Edit" : "Add"} Handout
+                </Link>
+              </div>
+            )}
           </header>
-          <main className="flex flex-col gap-4 items-center w-full">
+          <main className="flex flex-col mt-4 gap-4 items-center w-full">
             {lessonData?.blocks.map((block, idx) => {
               return (
                 <Card className="w-full md:w-[48rem]" key={block.id + idx}>

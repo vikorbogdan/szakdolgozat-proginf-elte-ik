@@ -22,6 +22,8 @@ const SandpackEditor = ({ handleHandoutSave }: SandpackEditorProps) => {
   const {
     sandpack: { files, editorState },
   } = useSandpack();
+  if (!theme || theme === "system") return null;
+
   return (
     <>
       <SandpackThemeProvider theme={(theme as SandpackThemeProp) ?? "auto"}>

@@ -21,6 +21,7 @@ import { useCallback, useState } from "react";
 import HandoutChangeTemplateDialogButton from "./_components/HandoutTemplateDialogButton";
 import HandoutShareCopyInput from "./_components/HandoutShareCopyInput";
 import HandoutTemplateSelect from "./_components/HandoutTemplateSelect";
+import ErrorPage from "@/components/ErrorPage";
 
 const EditHandoutPage = () => {
   const { id: lessonId } = useParams<{ id: string }>();
@@ -48,6 +49,7 @@ const EditHandoutPage = () => {
     });
   const isHandoutLoading = isCreateHandoutLoading || isUpdateHandoutLoading;
   const sandboxData = lessonData?.sandbox;
+  const { data: ownUserData } = trpc.getOwnUserId.useQuery();
   const trpcUtils = trpc.useUtils();
   const handleHandoutSave = (files: SandpackFiles) => {
     const data = {
@@ -79,6 +81,15 @@ const EditHandoutPage = () => {
   const handleUnlockTemplateChange = () => {
     deleteHandout({ lessonId });
   };
+  if (lessonData?.ownerId !== ownUserData?.id)
+    return (
+      <ErrorPage
+        code={403}
+        message={
+          "You don't have permission to edit this handout. Only the owner of the lesson can edit the handout."
+        }
+      />
+    );
   if (isLessonDataLoading) {
     return <LoadingPage />;
   }

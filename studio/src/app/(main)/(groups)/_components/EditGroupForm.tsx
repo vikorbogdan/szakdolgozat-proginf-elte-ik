@@ -44,13 +44,13 @@ const CreateNewGroupForm = ({
   const { mutate: editGroupMutation, isLoading: isCreateGroupLoading } =
     trpc.groups.update.useMutation({
       onSuccess: () => {
-        console.log("Successfully created Group");
+        console.log("Successfully edited Group");
         trpcUtils.groups.getGroupById.invalidate(groupId);
         trpcUtils.groups.list.invalidate();
         if (closeDialog) closeDialog();
       },
       onError: (err) => {
-        console.log("Failed creating Group: ", err);
+        console.log("Failed editing Group: ", err);
       },
     });
   useEffect(() => {

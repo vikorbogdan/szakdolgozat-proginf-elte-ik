@@ -12,18 +12,15 @@ const GroupDetailsMemberList = ({
 }: GroupDetailsMemberListProps) => {
   if (!users) return null;
   return (
-    <div className="md:w-1/3">
-      <h2 className="text-xl mb-4 font-semibold">Members</h2>
-      <ul className="flex gap-4 flex-col">
-        {users.map((user) => (
-          <GroupDetailsMemberListItem
-            key={user.id}
-            user={user}
-            isOwner={ownerId === user.id}
-          />
-        ))}
-      </ul>
-    </div>
+    <ul className="flex gap-4 flex-col">
+      {users.map((user) => (
+        <GroupDetailsMemberListItem
+          key={user.id}
+          user={user}
+          isOwner={ownerId === user.id}
+        />
+      ))}
+    </ul>
   );
 };
 

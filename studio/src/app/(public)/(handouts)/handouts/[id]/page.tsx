@@ -1,7 +1,8 @@
 "use client";
 import SandpackRenderer from "@/app/(public)/_components/SandpackRenderer";
 import { trpc } from "@/app/_trpc/client";
-import NotFound from "@/app/not-found";
+import ErrorPage from "@/components/ErrorPage";
+
 import LoadingPage from "@/components/LoadingPage";
 import { SandpackPredefinedTemplate } from "@codesandbox/sandpack-react";
 import { useParams } from "next/navigation";
@@ -11,7 +12,7 @@ const RenderHandoutPage = () => {
   const { data: handoutData, isLoading: isHandoutDataLoading } =
     trpc.handouts.getHandoutById.useQuery({ handoutId: id as string });
   if (isHandoutDataLoading) return <LoadingPage />;
-  if (!handoutData) return <NotFound />;
+  if (!handoutData) return <ErrorPage />;
   return (
     <div className="flex p-4 md:p-16 gap-16 bg-primary-foreground min-h-screen h-full w-full flex-col">
       <header>
