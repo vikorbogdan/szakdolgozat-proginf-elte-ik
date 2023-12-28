@@ -7,7 +7,7 @@ import MaxWidthWrapper from "../../../components/MaxWidthWrapper";
 import { ModeToggle } from "../../../components/ModeToggle";
 
 const Navbar = () => {
-  const scrolledDown = useScrollTop(100);
+  const scrolledDown = useScrollTop(50);
   return (
     <nav
       className={cn(
