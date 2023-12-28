@@ -34,11 +34,13 @@ const LessonContentBlock = ({
     blockId: `${block.id}_${order}`,
     duration: block.duration * 60 * 1000,
   };
-  const isInProgress = progress.some(
-    (progressData) =>
-      progressData.blockId === blockData.blockId &&
-      progressData.duration === blockData.duration
-  );
+  const isInProgress = Array.isArray(progress)
+    ? progress.some(
+        (progressData) =>
+          progressData.blockId === blockData.blockId &&
+          progressData.duration === blockData.duration
+      )
+    : false;
   const [isBlockCompleted, setIsBlockCompleted] = useState<boolean>(
     isInProgress as boolean
   );
