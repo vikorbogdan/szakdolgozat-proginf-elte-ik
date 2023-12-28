@@ -22,7 +22,6 @@ interface SandpackRendererProps {
 }
 
 const SandpackRenderer = ({ files, template }: SandpackRendererProps) => {
-  console.log(files);
   const SandpackComponent = useCallback(() => {
     return (
       <SandpackProvider template={template} files={files}>

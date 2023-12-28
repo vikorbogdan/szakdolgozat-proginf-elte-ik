@@ -2,12 +2,13 @@
 import AuthButton from "@/components/AuthButton";
 import { cn } from "@/lib/utils";
 import { useNavbarStore } from "@/store/client/useStore";
-import { HomeIcon, Library, TextQuote, Users2 } from "lucide-react";
+import { HomeIcon, Library, Loader2, TextQuote, Users2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Sidebar = () => {
   const menuOptions = [
@@ -63,15 +64,12 @@ const Sidebar = () => {
       className={`z-50 absolute lg:static text-foreground gap-8 flex-col h-screen flex bg-background [--width-animate:100%] md:[--width-animate:13rem] [--width-initial:0%] lg:[--width-initial:13rem] [--opacity-initial:0] lg:[--opacity-initial:1] [--opacity-animate:1]`}
     >
       <div className="flex flex-col items-center mt-8 gap-3">
-        <div className="h-20 w-20 relative">
-          <Image
-            alt="Profile picture of logged in user"
-            objectFit="cover"
-            className="rounded-full relative"
-            fill={true}
-            src={userData?.image || ""}
-          />
-        </div>
+        <Avatar className="h-20 w-20">
+          <AvatarImage src={userData?.image ?? ""} />
+          <AvatarFallback>
+            <Loader2 className="animate-spin w-10 h-10 text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
         <h3 className="font-bold">{userData?.name}</h3>
         <AuthButton className="w-24 text-xs h-8" />
       </div>

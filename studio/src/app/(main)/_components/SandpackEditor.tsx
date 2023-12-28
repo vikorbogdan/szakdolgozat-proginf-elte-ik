@@ -22,11 +22,14 @@ const SandpackEditor = ({ handleHandoutSave }: SandpackEditorProps) => {
   const {
     sandpack: { files, editorState },
   } = useSandpack();
-  if (!theme || theme === "system") return null;
-
+  if (!theme) return null;
   return (
     <>
-      <SandpackThemeProvider theme={(theme as SandpackThemeProp) ?? "auto"}>
+      <SandpackThemeProvider
+        theme={
+          theme === "system" ? "auto" : (theme as SandpackThemeProp) ?? "auto"
+        }
+      >
         <SandpackStack>
           <SandpackLayout>
             <div

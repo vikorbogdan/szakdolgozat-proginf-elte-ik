@@ -6,6 +6,7 @@ import "./globals.css";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { getServerSession } from "next-auth";
 import TRPCProviders from "@/components/providers/Providers";
+import HydrationZustand from "@/components/HydrationZustand";
 
 const rubik = Rubik({ subsets: ["latin"] });
 
@@ -26,16 +27,18 @@ export default async function RootLayout({
       <body
         className={cn("min-h-screen font-sans antialiased", rubik.className)}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TRPCProviders>
-            <SessionProvider session={session}>{children}</SessionProvider>
-          </TRPCProviders>
-        </ThemeProvider>
+        <HydrationZustand>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TRPCProviders>
+              <SessionProvider session={session}>{children}</SessionProvider>
+            </TRPCProviders>
+          </ThemeProvider>
+        </HydrationZustand>
       </body>
     </html>
   );

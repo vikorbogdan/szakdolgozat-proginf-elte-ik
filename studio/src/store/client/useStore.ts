@@ -1,13 +1,19 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { LessonSlice, createLessonSlice } from "./slices/navbar/LessonSlice";
 import {
   NavBarOpenSlice,
   createNavbarOpenSlice,
 } from "./slices/navbar/NavbarOpenSlice";
-import { LessonSlice, createLessonSlice } from "./slices/navbar/LessonSlice";
 
 export const useNavbarStore = create<NavBarOpenSlice & LessonSlice>()(
-  (...a) => ({
-    ...createNavbarOpenSlice(...a),
-    ...createLessonSlice(...a),
-  })
+  persist(
+    (...a) => ({
+      ...createNavbarOpenSlice(...a),
+      ...createLessonSlice(...a),
+    }),
+    {
+      name: "navbar-data",
+    }
+  )
 );
