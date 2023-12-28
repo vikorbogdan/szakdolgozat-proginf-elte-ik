@@ -126,10 +126,10 @@ const EditBlockForm = () => {
           <LoadingPage />
         )}
       </div>
-      <div className="flex flex-col gap-4">
+      {/* <div className="flex flex-col gap-4">
         <label htmlFor="tags">Tags</label>
         <input type="text" name="tags" id="tags" />
-      </div>
+      </div> */}
       <input
         type="submit"
         value="Save Changes"
