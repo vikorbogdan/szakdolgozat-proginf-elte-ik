@@ -47,16 +47,14 @@ const CurrentLessonDisplay = () => {
           </Link>
         )}
         {/* if there is an ongoing lesson and we are on the ongoing lesson's page, show progress, elapsed time, and a button to end the lesson */}
-        <div className="text-xs flex flex-col gap-2">
+        <div className="text-[.6rem] sm:text-xs flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <div className="md:flex hidden w-20">Elapsed time</div>
             <Progress
               className="w-24 sm:w-36"
               value={elapsedTimePercentage <= 100 ? elapsedTimePercentage : 100}
             />
-            <div className="hidden sm:flex">
-              {moment.utc(elapsedTime).format("HH:mm:ss")}
-            </div>
+            <div className="">{moment.utc(elapsedTime).format("HH:mm:ss")}</div>
           </div>
           <div className="flex items-center gap-2">
             <div className="md:flex hidden w-20">Your Progress</div>
@@ -64,7 +62,7 @@ const CurrentLessonDisplay = () => {
               className="w-24 sm:w-36"
               value={progressPercentage <= 100 ? progressPercentage : 100}
             />
-            <div className="hidden sm:flex">
+            <div className="">
               {moment.utc(progressTime).format("HH:mm:ss")}
             </div>
           </div>
