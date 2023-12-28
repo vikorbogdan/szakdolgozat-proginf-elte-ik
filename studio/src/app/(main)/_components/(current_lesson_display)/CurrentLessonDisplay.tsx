@@ -21,9 +21,11 @@ const CurrentLessonDisplay = () => {
     if (onGoingLessonId) continueElapsedTimeTimer();
   }, []);
   const elapsedTimePercentage = (elapsedTime / onGoingLessonDuration) * 100;
-  const progressTime = progress?.reduce((acc, curr) => {
-    return acc + curr.duration;
-  }, 0);
+  const progressTime = Array.isArray(progress)
+    ? progress?.reduce((acc, curr) => {
+        return acc + curr.duration;
+      }, 0)
+    : 0;
   const progressPercentage = (progressTime / onGoingLessonDuration) * 100;
   const pathname = usePathname();
   const isOnLessonPage = /^\/lessons\/[a-zA-Z0-9]{25}$/.test(pathname);

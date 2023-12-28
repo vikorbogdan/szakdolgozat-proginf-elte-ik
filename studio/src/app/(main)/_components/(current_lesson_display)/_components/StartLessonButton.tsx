@@ -17,10 +17,9 @@ const StartLessonButton = () => {
   const handleLessonStart = () => {
     if (!lessonData) return;
     setOnGoingLessonId(lessonId);
-    const lessonDuration = lessonData?.blocks?.reduce(
-      (acc, curr) => acc + curr.duration,
-      0
-    );
+    const lessonDuration = Array.isArray(lessonData?.blocks)
+      ? lessonData?.blocks?.reduce((acc, curr) => acc + curr.duration, 0)
+      : 0;
     setOnGoingLessonDuration(lessonDuration * 60 * 1000);
     startElapsedTimeTimer();
   };
