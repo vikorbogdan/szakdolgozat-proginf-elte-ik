@@ -44,7 +44,7 @@ const AttachmentListItem = ({ attachment }: AttachmentListItemProps) => {
           <Loader2 className="w-10 h-10 animate-spin" />
         </div>
       )}
-      <CardContent className="m-0 p-4 gap-4 flex items-center h-full">
+      <CardContent className="m-0 p-4 sm:gap-4 flex items-center h-full">
         <div>
           <AttachmentListItemIcon
             attachment={attachment}
@@ -52,7 +52,7 @@ const AttachmentListItem = ({ attachment }: AttachmentListItemProps) => {
           />
         </div>
         <CardHeader>
-          <CardTitle className="truncate w-12 md:w-full">
+          <CardTitle className="truncate max-w-[10rem] lg:max-w-sm w-12 md:w-full">
             {attachment.name}
           </CardTitle>
           <CardDescription>
@@ -61,7 +61,7 @@ const AttachmentListItem = ({ attachment }: AttachmentListItemProps) => {
         </CardHeader>
         <HoverCard>
           <HoverCardTrigger className="cursor-pointer group ml-auto">
-            <Avatar>
+            <Avatar className="sm:flex hidden">
               <div className="w-full h-full group-hover:opacity-100 opacity-0 flex items-center justify-center absolute bg-background/50 transition-opacity">
                 <Info className="w-5 h-5" />
               </div>

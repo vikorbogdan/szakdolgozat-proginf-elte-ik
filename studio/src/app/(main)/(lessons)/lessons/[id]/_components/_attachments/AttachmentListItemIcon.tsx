@@ -18,10 +18,10 @@ const AttachmentListItemIcon = ({
   // if its an image, render the image as a thumbnail
   if (contentType.includes("image") && attachment)
     return (
-      <div className="relative w-16 h-16 border rounded-lg">
+      <div className="relative w-10 h-10 sm:w-16 sm:h-16 border rounded-lg">
         {imageLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="w-14 h-14 animate-spin text-muted"></Loader2>
+            <Loader2 className="w-10 h-10 sm:w-14 sm:h-14 animate-spin text-muted"></Loader2>
             <ImageIcon className="absolute w-6 h-6 text-muted"></ImageIcon>
           </div>
         )}

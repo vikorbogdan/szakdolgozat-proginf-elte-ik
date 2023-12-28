@@ -78,7 +78,7 @@ const LessonOutlinePage = () => {
           className="w-full flex-col items-center"
         >
           <header className="w-full flex md:flex-row flex-col items-center justify-between">
-            <h1 className="font-semibold text-2xl md:text-4xl">
+            <h1 className="font-semibold whitespace-nowrap md:mb-0 mb-4 text-2xl md:text-4xl">
               Download Attachments
             </h1>
             <AttachmentUploadButton lessonId={lessonData.id} />
