@@ -58,7 +58,7 @@ const LessonContentBlock = ({
 
   return (
     <Card
-      className={`w-full group hover:opacity-100 transition-opacity md:w-[48rem] ${
+      className={`w-screen group hover:opacity-100 transition-opacity md:w-[48rem] ${
         isBlockCompleted ? "opacity-50" : "opacity-100"
       }`}
     >

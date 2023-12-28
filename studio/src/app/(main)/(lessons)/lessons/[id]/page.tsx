@@ -46,7 +46,7 @@ const LessonOutlinePage = () => {
         </TabsList>
         <TabsContent value="lesson-outline">
           <header className="w-full flex flex-col items-center justify-center">
-            <h1 className="font-semibold text-2xl md:text-4xl">
+            <h1 className="font-semibold text-center text-2xl md:text-4xl">
               {lessonData?.title}
             </h1>
             {lessonData.ownerId === userId && (

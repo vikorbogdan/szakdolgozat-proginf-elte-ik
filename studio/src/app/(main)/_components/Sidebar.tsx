@@ -119,6 +119,7 @@ const Sidebar = () => {
                     )}
                     key={menuElement.order}
                     onClick={() => {
+                      setNavbarOpen(false);
                       router.push(menuElement.path);
                       setSelected(menuElement.path);
                     }}
