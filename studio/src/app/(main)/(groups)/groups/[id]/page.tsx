@@ -56,8 +56,8 @@ const SubjectGroupPage = () => {
           {groupData.description}
         </p>
       </aside>
-      <main className="flex items-start flex-col md:flex-row">
-        <div className="md:w-2/3 bg-card rounded-lg mr-4 p-4">
+      <main className="flex md:items-start items-center flex-col md:flex-row">
+        <div className="w-full md:w-2/3 bg-card rounded-lg md:mr-4 p-4">
           <div className="flex mb-4 items-center justify-between">
             <h2 className="text-xl font-semibold">Lessons</h2>
             {<GroupDetailsAddLessonButton groupId={groupData.id ?? ""} />}
@@ -80,8 +80,8 @@ const SubjectGroupPage = () => {
             </ul>
           )}
         </div>
-        <div className="md:w-1/3">
-          <div className="flex mb-4 items-center justify-between">
+        <div className="flex items-center flex-col w-full md:w-1/3 mt-4 md:mt-0">
+          <div className="flex w-full mb-4 items-center justify-between">
             <h2 className="text-xl font-semibold">Members</h2>
             {groupData.ownerId === userId && (
               <GroupDetailsAddMemberButton group={groupData} />

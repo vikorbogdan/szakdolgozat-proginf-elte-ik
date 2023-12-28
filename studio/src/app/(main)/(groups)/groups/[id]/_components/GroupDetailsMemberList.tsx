@@ -12,7 +12,7 @@ const GroupDetailsMemberList = ({
 }: GroupDetailsMemberListProps) => {
   if (!users) return null;
   return (
-    <ul className="flex gap-4 flex-col">
+    <ul className="flex w-full gap-4 flex-col">
       {users.map((user) => (
         <GroupDetailsMemberListItem
           key={user.id}
