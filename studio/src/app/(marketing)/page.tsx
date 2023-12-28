@@ -48,17 +48,17 @@ export default function Home() {
               description="Curate your curriculum with ease. Compose Lesson Outlines using pre-defined, modular Learning Blocks — save your favorite equation or concept once and reuse it in whatever lesson it fits. "
             />
             <FeaturesCard
-              icon={<Library className="flex-grow h-20 w-20" />}
+              icon={<Library className=" h-20 w-20" />}
               title="Lesson Library at Your Fingertips"
               description="Never lose track of your teaching materials. Our app acts as a central library for your Lesson Outlines — find and attach your best content to multiple Subject Groups seamlessly."
             />
             <FeaturesCard
-              icon={<Zap className="flex-grow h-20 w-20" />}
+              icon={<Zap className=" h-20 w-20" />}
               title="Lesson Mode On"
               description="Teach your classes with 'Lesson Mode'. Track time and progress with a glance, while studying your Lesson Outline. Mark your current progress with interactive checkpoints for a seamless teaching experience."
             />
             <FeaturesCard
-              icon={<Braces className="flex-grow h-20 w-20" />}
+              icon={<Braces className=" h-20 w-20" />}
               title="Browser-Based Challenges"
               description="Transform lessons into interactive experiences with live-edit handouts. Upload exercises for any subject, allowing students to solve directly in their browsers. Instant results and easy sharing make for an engaging, hands-on learning journey."
             />

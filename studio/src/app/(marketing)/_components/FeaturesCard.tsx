@@ -31,9 +31,9 @@ const FeaturesCard = ({ icon, title, description }: FeaturesCardProps) => {
     >
       <Card
         ref={cardRef}
-        className="py-5 md:py-0 md:px-5 flex flex-col md:flex-row items-center justify-center"
+        className="py-5 md:py-0 h-auto md:h-56 lg:h-44 md:px-5 flex flex-col md:flex-row items-center justify-center"
       >
-        {icon}
+        <div>{icon}</div>
         <CardHeader className="text-center md:text-left">
           <CardTitle>{title}</CardTitle>
           <CardDescription className="max-w-md">{description}</CardDescription>
