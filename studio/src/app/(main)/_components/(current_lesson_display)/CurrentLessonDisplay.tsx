@@ -1,26 +1,30 @@
-import { trpc } from "@/app/_trpc/client";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useNavbarStore } from "@/store/client/useStore";
-import { ArrowUpRightSquare, Clock, XOctagon } from "lucide-react";
+import { ArrowUpRightSquare, Clock } from "lucide-react";
+import moment from "moment";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import EndLessonButton from "./_components/EndLessonButton";
 import StartLessonButton from "./_components/StartLessonButton";
-import moment from "moment";
-import { useEffect } from "react";
 const CurrentLessonDisplay = () => {
   const {
     elapsedTime,
     onGoingLessonId,
     onGoingLessonDuration,
     continueElapsedTimeTimer,
+    progress,
   } = useNavbarStore();
   useEffect(() => {
     if (onGoingLessonId) continueElapsedTimeTimer();
   }, []);
   const elapsedTimePercentage = (elapsedTime / onGoingLessonDuration) * 100;
+  const progressTime = progress.reduce((acc, curr) => {
+    return acc + curr.duration;
+  }, 0);
+  const progressPercentage = (progressTime / onGoingLessonDuration) * 100;
   const pathname = usePathname();
   const isOnLessonPage = /^\/lessons\/[a-zA-Z0-9]{25}$/.test(pathname);
   const isOnOngoingLessonPage =
@@ -56,8 +60,13 @@ const CurrentLessonDisplay = () => {
           </div>
           <div className="flex items-center gap-2">
             <div className="md:flex hidden w-20">Your Progress</div>
-            <Progress className="w-24 sm:w-36" value={100} />
-            <div className="hidden sm:flex">00:00:00</div>
+            <Progress
+              className="w-24 sm:w-36"
+              value={progressPercentage <= 100 ? progressPercentage : 100}
+            />
+            <div className="hidden sm:flex">
+              {moment.utc(progressTime).format("HH:mm:ss")}
+            </div>
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-2">

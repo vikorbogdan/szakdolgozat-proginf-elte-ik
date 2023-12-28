@@ -7,21 +7,23 @@ export interface LessonSlice {
   onGoingLessonDuration: number;
   setOnGoingLessonDuration: (onGoingLessonDuration: number) => void;
   setElapsedTime: (elapsedTime: number) => void;
-  setProgress: (progress: number) => void;
   elapsedTime: number;
   startElapsedTimeTimer: () => void;
   stopElapsedTimeTimer: () => void;
-  progress: number;
+  progress: { blockId: string; duration: number }[];
+  setProgress: (progress: { blockId: string; duration: number }[]) => void;
+  addProgress: (blockId: string, duration: number) => void;
   resetLesson: () => void;
   startTimeStamp: number | null;
   continueElapsedTimeTimer: () => void;
+  removeProgress: (blockId: string) => void;
 }
 
 const initialLessonState = {
   onGoingLessonDuration: 0,
   onGoingLessonId: null,
   elapsedTime: 0,
-  progress: 0,
+  progress: [],
   startTimeStamp: null,
 };
 
@@ -35,6 +37,17 @@ export const createLessonSlice: StateCreator<LessonSlice> = (set, get) => {
     setOnGoingLessonId: (onGoingLessonId) => set({ onGoingLessonId }),
     setElapsedTime: (elapsedTime) => set({ elapsedTime }),
     setProgress: (progress) => set({ progress }),
+    addProgress: (blockId: string, duration: number) => {
+      const newProgress = [...get().progress];
+      newProgress.push({ blockId, duration });
+      set({ progress: newProgress });
+    },
+    removeProgress: (blockId: string) => {
+      const newProgress = [...get().progress];
+      const index = newProgress.findIndex((p) => p.blockId === blockId);
+      if (index !== -1) newProgress.splice(index, 1);
+      set({ progress: newProgress });
+    },
     resetLesson: () => {
       get().stopElapsedTimeTimer();
       set(initialLessonState);

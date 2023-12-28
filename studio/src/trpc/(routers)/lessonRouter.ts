@@ -633,5 +633,7 @@ export type LessonGetLessonByIdFileOutput = {
   size: string;
 };
 
+export type LessonGetLessonByIdOutput = LessonRouterOutput["getLessonById"];
+
 export type LessonListAvailableForGroupOutput =
   LessonRouterOutput["listAvailableForGroup"];
