@@ -3,7 +3,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { useNavbarStore } from "@/store/client/useStore";
 import { motion } from "framer-motion";
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight, Menu } from "lucide-react";
 import CurrentLessonDisplay from "./(current_lesson_display)/CurrentLessonDisplay";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -37,7 +37,7 @@ const Navbar = () => {
             initial={{ rotate: 0 }}
             animate={navbarOpen ? { rotate: -180 } : { rotate: 0 }}
           >
-            <ChevronsRight className="h-6 w-6" />
+            <Menu className="h-6 w-6" />
           </motion.div>
         </Button>
         <CurrentLessonDisplay />
