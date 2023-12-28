@@ -13,10 +13,12 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import AttachmentList from "./_components/_attachments/AttachmentList";
 import AttachmentUploadButton from "./_components/_attachments/AttachmentUploadButton";
+import { useNavbarStore } from "@/store/client/useStore";
 
 const LessonOutlinePage = () => {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { onGoingLessonId } = useNavbarStore();
   const {
     data: lessonData,
     isLoading: isLessonDataLoading,
@@ -51,12 +53,17 @@ const LessonOutlinePage = () => {
             </h1>
             {lessonData.ownerId === userId && (
               <div className="flex gap-2">
-                <Link
-                  href={`/lessons/${id}/edit`}
-                  className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
-                >
-                  {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
-                </Link>
+                {onGoingLessonId !== lessonData.id && (
+                  <Link
+                    href={`/lessons/${id}/edit`}
+                    className={cn(
+                      buttonVariants({ variant: "outline" }),
+                      "mt-4"
+                    )}
+                  >
+                    {lessonData.blocks.length === 0 ? "Add" : "Edit"} Blocks
+                  </Link>
+                )}
                 <Link
                   href={`/lessons/${id}/edit/handout`}
                   className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
