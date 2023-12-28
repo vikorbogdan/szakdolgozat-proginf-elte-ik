@@ -21,7 +21,7 @@ const CurrentLessonDisplay = () => {
     if (onGoingLessonId) continueElapsedTimeTimer();
   }, []);
   const elapsedTimePercentage = (elapsedTime / onGoingLessonDuration) * 100;
-  const progressTime = progress.reduce((acc, curr) => {
+  const progressTime = progress?.reduce((acc, curr) => {
     return acc + curr.duration;
   }, 0);
   const progressPercentage = (progressTime / onGoingLessonDuration) * 100;

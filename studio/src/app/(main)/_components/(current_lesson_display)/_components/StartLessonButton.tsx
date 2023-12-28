@@ -17,7 +17,7 @@ const StartLessonButton = () => {
   const handleLessonStart = () => {
     if (!lessonData) return;
     setOnGoingLessonId(lessonId);
-    const lessonDuration = lessonData?.blocks.reduce(
+    const lessonDuration = lessonData?.blocks?.reduce(
       (acc, curr) => acc + curr.duration,
       0
     );
