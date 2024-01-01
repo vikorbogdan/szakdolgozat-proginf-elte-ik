@@ -38,7 +38,7 @@ const EditGroupButton = ({ groupId, isCompact }: EditGroupButtonProps) => {
       )}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Subject Group</DialogTitle>
+          <DialogTitle>Edit Subject Group</DialogTitle>
           <DialogDescription>
             <EditGroupForm
               groupId={groupId}
